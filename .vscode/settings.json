@@ -1,0 +1,34 @@
+{
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "$(capture).js, $(capture).*.ts, $(capture).*.js, $(capture).*.tsx, $(capture).*.jsx",
+    "*.js": "$(capture).js.map, $(capture).*.ts, $(capture).*.js",
+    "*.jsx": "$(capture).jsx.map, $(capture).*.tsx, $(capture).*.jsx, $(capture).*.ts, $(capture).*.js",
+    "*.tsx": "$(capture).tsx.map, $(capture).*.tsx, $(capture).*.jsx, $(capture).*.ts, $(capture).*.js",
+    "tsconfig.json": "tsconfig.*.json, tsconfig.tsbuildinfo",
+    ".gitignore": ".gitmodules, .gitattributes",
+    ".prettierrc": ".prettierignore",
+    ".stylelintrc": ".stylelintignore",
+    ".eslintrc.cjs": ".eslintcache",
+    ".env": ".env.*",
+    "package.json": ".npmrc, yarn.lock, .yarnrc, .nvmrc, yarn-error.log, bun.lockb"
+  },
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "workbench.editor.tabSizing": "shrink",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.prettier": "explicit",
+    "source.fixAll.markdownlint": "explicit"
+  },
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "typescriptreact",
+    "javascriptreact"
+  ],
+  "files.eol": "\n"
+}

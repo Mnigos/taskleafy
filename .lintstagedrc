@@ -1,0 +1,4 @@
+{
+  "*.{js,ts,jsx,tsx}": "eslint --cache --fix",
+  "*.{css,scss,less}": "stylelint \"**/*.{sass,scss,pcss,postcss,css}\" --allow-empty-input --ignore-path .gitignore"
+}

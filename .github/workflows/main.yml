@@ -21,11 +21,10 @@ jobs:
       - name: Build Application 🧱
         run: bun run build
         env:
-          NEXT_PUBLIC_API_URL: https://api.example.com
-          AUTH_SPOTIFY_ID: secret
-          AUTH_SPOTIFY_SECRET: secret
-          NEXTAUTH_URL: https://example.com
-          NEXTAUTH_SECRET: secret
+          DATABASE_URL: url
+          AUTH_DISCORD_ID: secret
+          AUTH_DISCORD_SECRET: secret
+          AUTH_SECRET: secret
 
   lint:
     name: 'Lint 🐱'
@@ -40,10 +39,12 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Lint JS files 🐱
-        run: bun run lint:js
-
-      - name: Lint CSS files 🐱
-        run: bun run lint:css
+        run: bun run lint
+        env:
+          DATABASE_URL: url
+          AUTH_DISCORD_ID: secret
+          AUTH_DISCORD_SECRET: secret
+          AUTH_SECRET: secret
 
   test:
     name: 'Test 🧪'

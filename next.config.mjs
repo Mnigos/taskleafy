@@ -1,6 +1,5 @@
 import { fileURLToPath } from 'node:url'
 
-import webpack from 'webpack'
 import createJiti from 'jiti'
 const jiti = createJiti(fileURLToPath(import.meta.url))
 
@@ -15,10 +14,6 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   webpack: (config, { isServer }) => {
-    config.plugins.push(
-      new webpack.IgnorePlugin({ resourceRegExp: /^pg-native$/ })
-    )
-
     if (!isServer) {
       config.resolve = {
         ...config.resolve,

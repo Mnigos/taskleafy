@@ -1,30 +1,25 @@
-import { Button } from '@nextui-org/button'
 import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/card'
+import { redirect } from 'next/navigation'
 
-import { signIn } from './auth'
+import { SignInButton } from './components/sign-in-button'
+import { auth } from './auth'
 
-export default function Home() {
+export default async function HomePage() {
+  const session = await auth()
+
+  if (session?.user) redirect('/board')
+
   return (
     <main className="flex items-center justify-center h-screen">
       <Card>
-        <CardHeader className="text-3xl text-primary">Taskleafy</CardHeader>
+        <CardHeader className="text-3xl text-primary">TaskLeafy</CardHeader>
 
         <CardBody>
           Simplify your tasks management with this simple app.
         </CardBody>
 
         <CardFooter>
-          <form
-            action={async () => {
-              'use server'
-
-              await signIn()
-            }}
-          >
-            <Button color="primary" type="submit">
-              Sign in
-            </Button>
-          </form>
+          <SignInButton />
         </CardFooter>
       </Card>
     </main>

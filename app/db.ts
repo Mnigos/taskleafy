@@ -1,13 +1,7 @@
-import { Pool } from 'pg'
 import { PrismaClient } from '@prisma/client'
-import { PrismaPg } from '@prisma/adapter-pg'
-
-import { env } from './env'
 
 const prismaClientSingleton = () => {
-  const pool = new Pool({ connectionString: env.DATABASE_URL })
-  const adapter = new PrismaPg(pool)
-  return new PrismaClient({ adapter })
+  return new PrismaClient()
 }
 
 declare const globalThis: {

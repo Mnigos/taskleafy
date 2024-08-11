@@ -1,7 +1,7 @@
 import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/card'
 import { redirect } from 'next/navigation'
 
-import { SignInButton } from './components/sign-in-button'
+import { SignInButton } from './auth/components/sign-in-button'
 import { auth } from './auth'
 
 export default async function HomePage() {
@@ -10,7 +10,7 @@ export default async function HomePage() {
   if (session?.user) redirect('/board')
 
   return (
-    <main className="flex items-center justify-center h-screen">
+    <div className="flex h-screen items-center justify-center">
       <Card>
         <CardHeader className="text-3xl text-primary">TaskLeafy</CardHeader>
 
@@ -22,6 +22,6 @@ export default async function HomePage() {
           <SignInButton />
         </CardFooter>
       </Card>
-    </main>
+    </div>
   )
 }

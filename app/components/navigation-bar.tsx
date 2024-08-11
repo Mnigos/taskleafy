@@ -5,9 +5,9 @@ import {
   NavbarItem,
 } from '@nextui-org/navbar'
 
-import { SignInButton } from './sign-in-button'
 import { UserDropdown } from './user-dropdown'
 
+import { SignInButton } from '@app/auth/components'
 import { auth } from '@app/auth'
 
 export async function NavigationBar() {
@@ -15,7 +15,7 @@ export async function NavigationBar() {
 
   return (
     <Navbar>
-      <NavbarBrand className="text-primary font-bold">TaskLeafy</NavbarBrand>
+      <NavbarBrand className="font-bold text-primary">TaskLeafy</NavbarBrand>
       <NavbarContent justify="end">
         <NavbarItem>
           {session?.user ? (

@@ -16,10 +16,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.className}>
-      <body className="dark min-h-screen">
+      <body className="min-h-screen dark">
         <RootProviders>
           <NavigationBar />
-          {children}
+          <div className="flex h-screen justify-center">
+            <main className="w-full max-w-[1024px]">{children}</main>
+          </div>
         </RootProviders>
       </body>
     </html>

@@ -1,10 +1,9 @@
+import { fromDate, getLocalTimeZone } from '@internationalized/date'
 import { redirect } from 'next/navigation'
 
-import {
-  ShowDoneTasksCheckbox,
-  TaskCard,
-  AddTaskModal,
-} from './components/tasks'
+import { AddTaskModal, ShowDoneTasksCheckbox } from './components/tasks'
+import { TasksList } from './components/tasks/tasks-list'
+import { now, tomorrow } from './helpers/date'
 
 import { auth } from '@app/auth'
 import { prisma } from '@app/db'
@@ -12,7 +11,7 @@ import type { PageProps } from '@app/types/props'
 
 namespace BoardPage {
   export interface Props extends PageProps {
-    searchParams: {
+    readonly searchParams: {
       'show-done'?: string
     }
   }
@@ -31,7 +30,25 @@ async function BoardPage({ searchParams }: BoardPage.Props) {
     },
   })
 
-  const unDoneTasks = tasks.filter(task => !task.isDone)
+  const overdueTasks = tasks.filter(
+    task =>
+      task.dueDate &&
+      !task.isDone &&
+      fromDate(task.dueDate, getLocalTimeZone()).day < now.day
+  )
+  const todayTasks = tasks.filter(
+    task =>
+      task.dueDate &&
+      !task.isDone &&
+      fromDate(task.dueDate, getLocalTimeZone()).day === now.day
+  )
+  const tomorrowTasks = tasks.filter(
+    task =>
+      task.dueDate &&
+      !task.isDone &&
+      fromDate(task.dueDate, getLocalTimeZone()).day === tomorrow.day
+  )
+  const noDateTasks = tasks.filter(task => !task.dueDate && !task.isDone)
   const doneTasks = tasks.filter(task => task.isDone)
 
   return (
@@ -43,29 +60,24 @@ async function BoardPage({ searchParams }: BoardPage.Props) {
       </header>
 
       <main className="flex flex-col gap-4">
-        {unDoneTasks.length > 0 && (
-          <div className="flex flex-col gap-2">
-            <div>
-              {unDoneTasks.length} {unDoneTasks.length === 1 ? 'task' : 'tasks'}
-            </div>
+        {overdueTasks.length > 0 && (
+          <TasksList tasks={overdueTasks} header="Overdue" />
+        )}
 
-            {unDoneTasks.map(({ id, name, isDone }) => (
-              <TaskCard key={id} id={id} name={name} isDone={isDone} />
-            ))}
-          </div>
+        {todayTasks.length > 0 && (
+          <TasksList tasks={todayTasks} header="Today" />
+        )}
+
+        {tomorrowTasks.length > 0 && (
+          <TasksList tasks={tomorrowTasks} header="Tomorrow" />
+        )}
+
+        {noDateTasks.length > 0 && (
+          <TasksList tasks={noDateTasks} header="No date" />
         )}
 
         {doneTasks.length > 0 && showDone && (
-          <div className="flex flex-col gap-2">
-            <div>
-              {doneTasks.length} done{' '}
-              {doneTasks.length === 1 ? 'task' : 'tasks'}
-            </div>
-
-            {doneTasks.map(({ id, name, isDone }) => (
-              <TaskCard key={id} id={id} name={name} isDone={isDone} />
-            ))}
-          </div>
+          <TasksList tasks={doneTasks} header="Done" />
         )}
       </main>
 

@@ -34,7 +34,7 @@ export function TaskCard({ id, name, isDone, dueDate }: Readonly<PickedTask>) {
           {name}
         </div>
 
-        {dueDate && dueDateValue && (
+        {dueDate && dueDateValue && !isDone && (
           <div
             className={cn(
               'flex items-center gap-1 text-xs',

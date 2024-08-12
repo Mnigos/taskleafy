@@ -20,7 +20,7 @@ export default function RootLayout({
         <RootProviders>
           <NavigationBar />
           <div className="flex h-screen justify-center">
-            <main className="w-full max-w-[1024px]">{children}</main>
+            <main className="w-full max-w-[1024px] px-2">{children}</main>
           </div>
         </RootProviders>
       </body>

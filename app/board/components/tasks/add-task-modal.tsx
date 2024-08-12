@@ -1,8 +1,8 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { getLocalTimeZone } from '@internationalized/date'
 import { Button } from '@nextui-org/button'
-import { DatePicker } from '@nextui-org/date-picker'
 import { Input, Textarea } from '@nextui-org/input'
 import {
   Modal,
@@ -16,11 +16,15 @@ import { useForm } from 'react-hook-form'
 import { LuPlusCircle } from 'react-icons/lu'
 import { z } from 'zod'
 
+import { AddTaskModalDatePicker } from './add-task-modal-date-picker'
+
 import { addTaskAction } from '@app/board/actions'
-const taskSchema = z.object({
+import { now } from '@app/board/helpers/date'
+
+const addTaskSchema = z.object({
   name: z.string().min(3),
   description: z.string().optional(),
-  dueDate: z.string().date().optional(),
+  dueDate: z.coerce.date().min(now.toDate(getLocalTimeZone())).optional(),
 })
 
 export function AddTaskModal() {
@@ -28,16 +32,16 @@ export function AddTaskModal() {
   const {
     register,
     formState: { errors, isValid },
-  } = useForm<z.infer<typeof taskSchema>>({
+  } = useForm<z.infer<typeof addTaskSchema>>({
     mode: 'onBlur',
     reValidateMode: 'onChange',
-    resolver: zodResolver(taskSchema),
+    resolver: zodResolver(addTaskSchema),
   })
 
   async function formAction(data: FormData) {
     const dueDate = data.get('dueDate')?.toString()
 
-    const body = taskSchema.parse({
+    const body = addTaskSchema.parse({
       name: data.get('name'),
       description: data.get('description'),
       dueDate: dueDate ? new Date(dueDate) : undefined,
@@ -84,11 +88,7 @@ export function AddTaskModal() {
                     variant="bordered"
                   />
 
-                  <DatePicker
-                    label="Due date"
-                    name="dueDate"
-                    variant="bordered"
-                  />
+                  <AddTaskModalDatePicker />
                 </ModalBody>
 
                 <ModalFooter>

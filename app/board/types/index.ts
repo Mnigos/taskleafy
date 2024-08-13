@@ -1,1 +1,2 @@
-export * from './picked-task'
+export * from './task'
+export * from './board'

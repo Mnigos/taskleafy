@@ -19,7 +19,7 @@ export default function RootLayout({
       <body className="min-h-screen dark">
         <RootProviders>
           <NavigationBar />
-          <div className="flex h-screen justify-center">
+          <div className="flex min-h-screen justify-center">
             <main className="w-full max-w-[1024px] px-2">{children}</main>
           </div>
         </RootProviders>

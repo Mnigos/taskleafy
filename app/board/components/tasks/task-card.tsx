@@ -20,7 +20,7 @@ namespace TaskCard {
 }
 
 function TaskCard({ id, name, isDone, dueDate, index }: TaskCard.Props) {
-  const { tasksBoard, changeTaskTable } = useTasksBoard()
+  const { tasksBoard, markTaskAsDone } = useTasksBoard()
 
   const dueDateValue = dueDate
     ? fromDate(dueDate, getLocalTimeZone())
@@ -51,16 +51,14 @@ function TaskCard({ id, name, isDone, dueDate, index }: TaskCard.Props) {
                 defaultSelected={isDone}
                 isDisabled={isDone}
                 onClick={() => {
-                  console.log(droppableId)
-
                   const sourceKey = droppableId as BoardKeyWithoutOverdue
                   const task = tasksBoard[sourceKey].items.find(
                     task => task.id === id
                   )
 
-                  if (!isDone && task)
+                  if (!isDone && task && sourceKey !== 'done')
                     setTimeout(() => {
-                      changeTaskTable(task, sourceKey, 'done')
+                      markTaskAsDone(task, sourceKey)
                     }, 500)
                 }}
               />

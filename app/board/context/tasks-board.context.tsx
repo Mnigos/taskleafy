@@ -1,15 +1,11 @@
 'use client'
 
+import { fromDate, getLocalTimeZone } from '@internationalized/date'
 import type { Task } from '@prisma/client'
 import type { ReactNode } from 'react'
-import { createContext, useContext, useEffect, useState } from 'react'
-import { fromDate, getLocalTimeZone } from '@internationalized/date'
+import { createContext, useContext, useState } from 'react'
+import type { DraggableLocation } from 'react-beautiful-dnd'
 
-import type {
-  AddTask,
-  BoardKeyWithoutOverdue,
-  TasksBoard,
-} from '@app/board/types'
 import {
   boardKeyFactory,
   dueDateFactory,
@@ -21,6 +17,11 @@ import {
   useTasksQuery,
   useUpdateTaskMutation,
 } from '@app/board/hooks'
+import type {
+  AddTask,
+  BoardKeyWithoutOverdue,
+  TasksBoard,
+} from '@app/board/types'
 import { reorder } from '@app/utils/reorder'
 
 export const TasksBoardContext = createContext<{
@@ -32,8 +33,8 @@ export const TasksBoardContext = createContext<{
   ) => void
   changeTaskTable: (
     task: Task,
-    sourceKey: BoardKeyWithoutOverdue,
-    destinationKey: BoardKeyWithoutOverdue
+    source: DraggableLocation,
+    destination: DraggableLocation
   ) => void
   addTask: (data: AddTask) => void
 }>({
@@ -145,8 +146,8 @@ function TasksBoardProvider({
         ...tasks,
         items: reorder(
           tasksBoard[boardKey].items,
-          sourceIndex,
-          destinationIndex
+          destinationIndex,
+          sourceIndex
         ),
       },
     })
@@ -154,9 +155,12 @@ function TasksBoardProvider({
 
   function changeTaskTable(
     task: Task,
-    sourceKey: BoardKeyWithoutOverdue,
-    destinationKey: BoardKeyWithoutOverdue
+    source: DraggableLocation,
+    destination: DraggableLocation
   ) {
+    const sourceKey = source.droppableId as BoardKeyWithoutOverdue
+    const destinationKey = destination.droppableId as BoardKeyWithoutOverdue
+
     const sourceTasks = tasksBoard[sourceKey]
     const destinationTasks = tasksBoard[destinationKey]
 
@@ -172,6 +176,8 @@ function TasksBoardProvider({
       data: updatedData,
     })
 
+    const updatedTask = { ...task, ...updatedData }
+
     setTasksBoard({
       ...tasksBoard,
       [sourceKey]: {
@@ -180,13 +186,12 @@ function TasksBoardProvider({
       },
       [destinationKey]: {
         ...destinationTasks,
-        items: [
-          ...destinationTasks.items,
-          {
-            ...task,
-            ...updatedData,
-          },
-        ],
+        items: reorder(
+          destinationTasks.items,
+          destination.index,
+          undefined,
+          updatedTask
+        ),
       },
     })
   }
@@ -208,10 +213,6 @@ function TasksBoardProvider({
       },
     })
   }
-
-  useEffect(() => {
-    console.log('added', addedTask)
-  }, [addedTask])
 
   return (
     <TasksBoardContext.Provider

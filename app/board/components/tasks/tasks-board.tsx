@@ -40,11 +40,7 @@ function TasksBoard({ showDone }: TasksBoard.Props) {
       if (destination.droppableId === 'overdue') return
 
       if (itemToDrop) {
-        changeTaskTable(
-          itemToDrop,
-          source.droppableId as BoardKeyWithoutOverdue,
-          destination.droppableId as BoardKeyWithoutOverdue
-        )
+        changeTaskTable(itemToDrop, source, destination)
       }
     }
   }

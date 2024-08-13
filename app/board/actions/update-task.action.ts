@@ -15,8 +15,6 @@ export async function updateTask({ id, data }: UpdateTaskParams) {
 
   if (!session?.user?.id) throw new Error('Not authenticated')
 
-  console.log(data)
-
   return prisma.task.update({
     where: {
       id,

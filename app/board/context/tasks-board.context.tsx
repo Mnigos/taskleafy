@@ -37,6 +37,10 @@ export const TasksBoardContext = createContext<{
     destination: DraggableLocation
   ) => void
   addTask: (data: AddTask) => void
+  markTaskAsDone: (
+    task: Task,
+    sourceKey: Exclude<BoardKeyWithoutOverdue, 'done'>
+  ) => void
 }>({
   tasksBoard: {
     overdue: {
@@ -68,6 +72,7 @@ export const TasksBoardContext = createContext<{
   reorderTasks: () => {},
   changeTaskTable: () => {},
   addTask: () => {},
+  markTaskAsDone: () => {},
 })
 
 namespace TasksBoardProvider {
@@ -81,7 +86,7 @@ function TasksBoardProvider({
   initialTasks,
 }: TasksBoardProvider.Props) {
   const { mutate: updateTaskMutation } = useUpdateTaskMutation()
-  const { mutateAsync: addTaskMutation, data: addedTask } = useAddTaskMutation()
+  const { mutateAsync: addTaskMutation } = useAddTaskMutation()
   const { data: tasks } = useTasksQuery(initialTasks)
 
   const overdueTasks = tasks.filter(
@@ -203,13 +208,32 @@ function TasksBoardProvider({
       ? boardKeyFactory(fromDate(data.dueDate as Date, getLocalTimeZone()))
       : 'noDate'
 
-    console.log(addedTask)
-
     setTasksBoard({
       ...tasksBoard,
       [boardKey]: {
         ...tasksBoard[boardKey],
         items: [...tasksBoard[boardKey].items, newTask],
+      },
+    })
+  }
+
+  function markTaskAsDone(task: Task, sourceKey: BoardKeyWithoutOverdue) {
+    const updatedTask = { ...task, isDone: true }
+
+    updateTaskMutation({
+      id: task.id,
+      data: updatedTask,
+    })
+
+    setTasksBoard({
+      ...tasksBoard,
+      [sourceKey]: {
+        ...tasksBoard[sourceKey],
+        items: tasksBoard[sourceKey].items.filter(({ id }) => id !== task.id),
+      },
+      done: {
+        ...tasksBoard.done,
+        items: [...tasksBoard.done.items, updatedTask],
       },
     })
   }
@@ -221,6 +245,7 @@ function TasksBoardProvider({
         reorderTasks,
         changeTaskTable,
         addTask,
+        markTaskAsDone,
       }}
     >
       {children}

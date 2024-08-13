@@ -15,11 +15,12 @@ import {
 import { useForm } from 'react-hook-form'
 import { LuPlusCircle } from 'react-icons/lu'
 import { z } from 'zod'
+import { useRef } from 'react'
 
 import { AddTaskModalDatePicker } from './add-task-modal-date-picker'
 
-import { addTaskAction } from '@app/board/actions'
 import { now } from '@app/board/helpers/date'
+import { useTasksBoard } from '@app/board/context'
 
 const addTaskSchema = z.object({
   name: z.string().min(3),
@@ -37,17 +38,21 @@ export function AddTaskModal() {
     reValidateMode: 'onChange',
     resolver: zodResolver(addTaskSchema),
   })
+  const { addTask } = useTasksBoard()
+  const formReference = useRef<HTMLFormElement>(null)
 
-  async function formAction(data: FormData) {
-    const dueDate = data.get('dueDate')?.toString()
+  function formAction(formData: FormData) {
+    const dueDate = formData.get('dueDate')?.toString()
 
-    const body = addTaskSchema.parse({
-      name: data.get('name'),
-      description: data.get('description'),
+    const data = addTaskSchema.parse({
+      name: formData.get('name'),
+      description: formData.get('description'),
       dueDate: dueDate ? new Date(dueDate) : undefined,
     })
 
-    await addTaskAction(body)
+    addTask(data)
+
+    formReference.current?.reset()
 
     onClose()
   }
@@ -71,7 +76,7 @@ export function AddTaskModal() {
                 Add task
               </ModalHeader>
 
-              <form action={formAction}>
+              <form ref={formReference} action={formAction}>
                 <ModalBody>
                   <Input
                     label="Task name"

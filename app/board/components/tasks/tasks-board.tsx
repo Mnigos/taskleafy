@@ -2,7 +2,7 @@
 
 import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
 
-import { CustomDroppable } from '../misc/'
+import { CustomDroppable } from '../misc'
 
 import { TasksList } from './tasks-list'
 

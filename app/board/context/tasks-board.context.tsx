@@ -1,10 +1,10 @@
 'use client'
 
+import type { DraggableLocation } from '@hello-pangea/dnd'
 import { fromDate, getLocalTimeZone } from '@internationalized/date'
 import type { Task } from '@prisma/client'
 import type { ReactNode } from 'react'
 import { createContext, useContext, useState } from 'react'
-import type { DraggableLocation } from '@hello-pangea/dnd'
 
 import {
   boardKeyFactory,
@@ -22,7 +22,7 @@ import type {
   BoardKeyWithoutOverdue,
   TasksBoard,
 } from '@app/board/types'
-import { reorder } from '@app/utils/reorder'
+import { addAndReorder, reorder } from '@app/utils/reorder'
 
 export const TasksBoardContext = createContext<{
   tasksBoard: TasksBoard
@@ -191,10 +191,9 @@ function TasksBoardProvider({
       },
       [destinationKey]: {
         ...destinationTasks,
-        items: reorder(
+        items: addAndReorder(
           destinationTasks.items,
           destination.index,
-          undefined,
           updatedTask
         ),
       },

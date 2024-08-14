@@ -1,6 +1,6 @@
 'use server'
 
-import { signOut } from '../next-auth'
+import { signOut } from '../auth'
 
 export async function signOutAction() {
   await signOut()

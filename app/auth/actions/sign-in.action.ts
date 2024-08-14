@@ -1,6 +1,6 @@
 'use server'
 
-import { signIn } from '../next-auth'
+import { signIn } from '../auth'
 
 export async function signInAction() {
   await signIn()

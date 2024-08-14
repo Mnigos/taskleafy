@@ -1,2 +1,2 @@
-export * from './next-auth'
-export * from './next-auth.config'
+export * from './auth'
+export * from './auth.config'

@@ -2,7 +2,8 @@
 
 import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
 
-import { CustomDroppable } from './droppable'
+import { CustomDroppable } from '../misc/'
+
 import { TasksList } from './tasks-list'
 
 import { useTasksBoard } from '@app/board/context'

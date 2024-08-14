@@ -1,3 +1,5 @@
+'use client'
+
 import { type DateValue } from '@internationalized/date'
 import { Button, ButtonGroup } from '@nextui-org/button'
 import { DatePicker } from '@nextui-org/date-picker'

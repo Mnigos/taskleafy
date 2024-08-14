@@ -1,4 +1,4 @@
-import { getTasks } from './actions/get-tasks.action'
+import { getTasks } from './actions'
 import {
   AddTaskModal,
   ShowDoneTasksCheckbox,

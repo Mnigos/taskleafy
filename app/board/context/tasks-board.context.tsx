@@ -4,7 +4,7 @@ import { fromDate, getLocalTimeZone } from '@internationalized/date'
 import type { Task } from '@prisma/client'
 import type { ReactNode } from 'react'
 import { createContext, useContext, useState } from 'react'
-import type { DraggableLocation } from 'react-beautiful-dnd'
+import type { DraggableLocation } from '@hello-pangea/dnd'
 
 import {
   boardKeyFactory,

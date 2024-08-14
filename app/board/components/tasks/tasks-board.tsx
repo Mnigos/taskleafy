@@ -1,6 +1,6 @@
 'use client'
 
-import { DragDropContext, type DropResult } from 'react-beautiful-dnd'
+import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
 
 import { CustomDroppable } from './droppable'
 import { TasksList } from './tasks-list'

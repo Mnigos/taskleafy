@@ -1,7 +1,7 @@
 'use client'
 
 import { fromDate, getLocalTimeZone } from '@internationalized/date'
-import { Draggable } from 'react-beautiful-dnd'
+import { Draggable } from '@hello-pangea/dnd'
 import { Card, CardHeader } from '@nextui-org/card'
 import { Checkbox } from '@nextui-org/checkbox'
 import { cn } from '@nextui-org/theme'

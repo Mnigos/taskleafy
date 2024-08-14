@@ -1,18 +1,14 @@
 'use server'
 
-import { redirect } from 'next/navigation'
-
-import { auth } from '@app/auth'
+import { getServerUser } from '@app/auth/helpers'
 import { prisma } from '@app/db'
 
 export async function getTasks() {
-  const session = await auth()
-
-  if (!session?.user?.id) redirect('/')
+  const user = await getServerUser()
 
   return prisma.task.findMany({
     where: {
-      userId: session.user.id,
+      userId: user.id,
     },
   })
 }

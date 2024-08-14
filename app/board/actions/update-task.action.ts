@@ -2,7 +2,7 @@
 
 import type { Task } from '@prisma/client'
 
-import { auth } from '@app/auth'
+import { getServerUser } from '@app/auth/helpers'
 import { prisma } from '@app/db'
 
 export interface UpdateTaskParams {
@@ -11,9 +11,7 @@ export interface UpdateTaskParams {
 }
 
 export async function updateTask({ id, data }: UpdateTaskParams) {
-  const session = await auth()
-
-  if (!session?.user?.id) throw new Error('Not authenticated')
+  await getServerUser()
 
   return prisma.task.update({
     where: {

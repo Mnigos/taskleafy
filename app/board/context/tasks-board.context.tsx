@@ -6,17 +6,14 @@ import type { Task } from '@prisma/client'
 import type { ReactNode } from 'react'
 import { createContext, useContext, useState } from 'react'
 
+import { addTask as addTaskAction, updateTask } from '@app/board/actions'
 import {
   boardKeyFactory,
   dueDateFactory,
   now,
   tomorrow,
 } from '@app/board/helpers/date'
-import {
-  useAddTaskMutation,
-  useTasksQuery,
-  useUpdateTaskMutation,
-} from '@app/board/hooks'
+import { useTasksQuery } from '@app/board/hooks'
 import type {
   AddTask,
   BoardKeyWithoutOverdue,
@@ -35,12 +32,12 @@ export const TasksBoardContext = createContext<{
     task: Task,
     source: DraggableLocation,
     destination: DraggableLocation
-  ) => void
-  addTask: (data: AddTask) => void
+  ) => Promise<void>
+  addTask: (data: AddTask) => Promise<void>
   markTaskAsDone: (
     task: Task,
     sourceKey: Exclude<BoardKeyWithoutOverdue, 'done'>
-  ) => void
+  ) => Promise<void>
 }>({
   tasksBoard: {
     overdue: {
@@ -70,9 +67,9 @@ export const TasksBoardContext = createContext<{
     },
   },
   reorderTasks: () => {},
-  changeTaskTable: () => {},
-  addTask: () => {},
-  markTaskAsDone: () => {},
+  changeTaskTable: () => Promise.resolve(),
+  addTask: () => Promise.resolve(),
+  markTaskAsDone: () => Promise.resolve(),
 })
 
 namespace TasksBoardProvider {
@@ -85,8 +82,6 @@ function TasksBoardProvider({
   children,
   initialTasks,
 }: TasksBoardProvider.Props) {
-  const { mutate: updateTaskMutation } = useUpdateTaskMutation()
-  const { mutateAsync: addTaskMutation } = useAddTaskMutation()
   const { data: tasks } = useTasksQuery(initialTasks)
 
   const overdueTasks = tasks.filter(
@@ -158,7 +153,7 @@ function TasksBoardProvider({
     })
   }
 
-  function changeTaskTable(
+  async function changeTaskTable(
     task: Task,
     source: DraggableLocation,
     destination: DraggableLocation
@@ -175,11 +170,6 @@ function TasksBoardProvider({
         : {
             dueDate: dueDateFactory(destinationKey),
           }
-
-    updateTaskMutation({
-      id: task.id,
-      data: updatedData,
-    })
 
     const updatedTask = { ...task, ...updatedData }
 
@@ -198,10 +188,15 @@ function TasksBoardProvider({
         ),
       },
     })
+
+    await updateTask({
+      id: task.id,
+      data: updatedData,
+    })
   }
 
   async function addTask(data: AddTask) {
-    const newTask = await addTaskMutation(data)
+    const newTask = await addTaskAction(data)
 
     const boardKey = data.dueDate
       ? boardKeyFactory(fromDate(data.dueDate as Date, getLocalTimeZone()))
@@ -216,13 +211,8 @@ function TasksBoardProvider({
     })
   }
 
-  function markTaskAsDone(task: Task, sourceKey: BoardKeyWithoutOverdue) {
+  async function markTaskAsDone(task: Task, sourceKey: BoardKeyWithoutOverdue) {
     const updatedTask = { ...task, isDone: true }
-
-    updateTaskMutation({
-      id: task.id,
-      data: updatedTask,
-    })
 
     setTasksBoard({
       ...tasksBoard,
@@ -234,6 +224,11 @@ function TasksBoardProvider({
         ...tasksBoard.done,
         items: [...tasksBoard.done.items, updatedTask],
       },
+    })
+
+    await updateTask({
+      id: task.id,
+      data: updatedTask,
     })
   }
 

@@ -170,6 +170,7 @@ module.exports = {
       {
         allowList: {
           ref: true,
+          Ref: true,
           props: true,
           Props: true,
           param: true,

@@ -18,7 +18,7 @@ function TasksList({ tasks, header }: TasksList.Props) {
 
       <div>{`${tasks.length} ${tasks.length === 1 ? 'task' : 'tasks'}`}</div>
 
-      {tasks.map(({ id, name, isDone, dueDate }, index) => (
+      {tasks.map(({ id, name, isDone, dueDate, description }, index) => (
         <TaskCard
           key={id}
           id={id}
@@ -26,6 +26,7 @@ function TasksList({ tasks, header }: TasksList.Props) {
           name={name}
           isDone={isDone}
           dueDate={dueDate}
+          description={description}
         />
       ))}
     </div>

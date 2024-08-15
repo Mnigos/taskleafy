@@ -4,7 +4,7 @@ import type { SetOptional } from 'type-fest'
 import type { prisma } from '@app/db'
 
 export type PickedTask = SetOptional<
-  Pick<Task, 'id' | 'name' | 'isDone' | 'dueDate'>,
+  Pick<Task, 'id' | 'name' | 'isDone' | 'dueDate' | 'description'>,
   'dueDate'
 >
 

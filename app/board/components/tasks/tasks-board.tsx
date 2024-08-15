@@ -1,8 +1,6 @@
 'use client'
 
-import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
-
-import { CustomDroppable } from '../misc'
+import { DragDropContext, Droppable, type DropResult } from '@hello-pangea/dnd'
 
 import { TasksList } from './tasks-list'
 
@@ -47,18 +45,20 @@ function TasksBoard({ showDone }: TasksBoard.Props) {
   }
 
   return (
-    <DragDropContext onDragEnd={onDragEng}>
-      {tasksBoardEntries.map(([id, { header, items }]) => (
-        <CustomDroppable key={id} droppableId={id}>
-          {({ droppableProps, innerRef, placeholder }) => (
-            <div ref={innerRef} {...droppableProps}>
-              <TasksList tasks={items} header={header} />
-              {placeholder}
-            </div>
-          )}
-        </CustomDroppable>
-      ))}
-    </DragDropContext>
+    <>
+      <DragDropContext onDragEnd={onDragEng}>
+        {tasksBoardEntries.map(([id, { header, items }]) => (
+          <Droppable key={id} droppableId={id}>
+            {({ droppableProps, innerRef, placeholder }) => (
+              <div ref={innerRef} {...droppableProps}>
+                <TasksList tasks={items} header={header} />
+                {placeholder}
+              </div>
+            )}
+          </Droppable>
+        ))}
+      </DragDropContext>
+    </>
   )
 }
 

@@ -8,9 +8,17 @@ import { LuXCircle } from 'react-icons/lu'
 
 import { now, tomorrow, nextWeek } from '@app/board/helpers/date'
 
-export function AddTaskModalDatePicker() {
+namespace AddTaskModalDatePicker {
+  export type Props = Readonly<{
+    defaultValue?: DateValue
+  }>
+}
+
+function AddTaskModalDatePicker({
+  defaultValue,
+}: AddTaskModalDatePicker.Props) {
   const [dueDateValue, setDueDateValue] = useState<DateValue | undefined>(
-    undefined
+    defaultValue
   )
 
   return (
@@ -92,3 +100,5 @@ export function AddTaskModalDatePicker() {
     />
   )
 }
+
+export { AddTaskModalDatePicker }

@@ -1,3 +1,6 @@
+'use client'
+
+import { RescheduleOverdueTasks } from './reschedule-overdue-tasks'
 import { TaskCard } from './task-card'
 
 import type { PickedTask } from '@app/board/types'
@@ -12,8 +15,10 @@ namespace TasksList {
 function TasksList({ tasks, header }: TasksList.Props) {
   return (
     <div className="flex flex-col gap-2">
-      <header>
+      <header className="flex items-center justify-between">
         <h2 className="text-xl">{header}</h2>
+
+        {header === 'Overdue' && <RescheduleOverdueTasks />}
       </header>
 
       <div>{`${tasks.length} ${tasks.length === 1 ? 'task' : 'tasks'}`}</div>

@@ -12,15 +12,15 @@ import {
   ModalHeader,
   useDisclosure,
 } from '@nextui-org/modal'
+import { useState, type FormEvent } from 'react'
 import { useForm } from 'react-hook-form'
 import { LuPlusCircle } from 'react-icons/lu'
 import { z } from 'zod'
-import { useRef } from 'react'
 
 import { AddTaskModalDatePicker } from './add-task-modal-date-picker'
 
-import { now } from '@app/board/helpers/date'
 import { useTasksBoard } from '@app/board/context'
+import { now } from '@app/board/helpers/date'
 
 const addTaskSchema = z.object({
   name: z.string().min(3),
@@ -29,19 +29,24 @@ const addTaskSchema = z.object({
 })
 
 export function AddTaskModal() {
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState(false)
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
   const {
     register,
     formState: { errors, isValid },
+    reset,
   } = useForm<z.infer<typeof addTaskSchema>>({
     mode: 'onBlur',
     reValidateMode: 'onChange',
     resolver: zodResolver(addTaskSchema),
   })
   const { addTask } = useTasksBoard()
-  const formReference = useRef<HTMLFormElement>(null)
 
-  function formAction(formData: FormData) {
+  async function formAction(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    const formData = new FormData(event.currentTarget)
+
     const dueDate = formData.get('dueDate')?.toString()
 
     const data = addTaskSchema.parse({
@@ -50,9 +55,13 @@ export function AddTaskModal() {
       dueDate: dueDate ? new Date(dueDate) : undefined,
     })
 
-    addTask(data)
+    setIsLoadingSubmit(true)
 
-    formReference.current?.reset()
+    await addTask(data)
+
+    reset()
+
+    setIsLoadingSubmit(false)
 
     onClose()
   }
@@ -76,7 +85,7 @@ export function AddTaskModal() {
                 Add task
               </ModalHeader>
 
-              <form ref={formReference} action={formAction}>
+              <form onSubmit={formAction}>
                 <ModalBody>
                   <Input
                     label="Task name"
@@ -105,7 +114,7 @@ export function AddTaskModal() {
                     color="primary"
                     type="submit"
                     isDisabled={!isValid}
-                    formAction={formAction}
+                    isLoading={isLoadingSubmit}
                   >
                     Add
                   </Button>

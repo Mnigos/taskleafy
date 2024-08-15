@@ -1,7 +1,11 @@
 'use client'
 
 import type { DraggableLocation } from '@hello-pangea/dnd'
-import { fromDate, getLocalTimeZone } from '@internationalized/date'
+import {
+  fromDate,
+  getLocalTimeZone,
+  type DateValue,
+} from '@internationalized/date'
 import type { Task } from '@prisma/client'
 import type { ReactNode } from 'react'
 import { createContext, useContext, useState } from 'react'
@@ -10,6 +14,7 @@ import {
   addTask as addTaskAction,
   getTask,
   updateTask as updateTaskAction,
+  rescheduleOverdueTasks as rescheduleOverdueTasksAction,
   type UpdateTaskParams,
 } from '@app/board/actions'
 import {
@@ -44,6 +49,7 @@ export const TasksBoardContext = createContext<{
     task: Task,
     sourceKey: Exclude<BoardKeyWithoutOverdue, 'done'>
   ) => Promise<void>
+  rescheduleOverdueTasks: (dueDateValue: DateValue) => Promise<void>
 }>({
   tasksBoard: {
     overdue: {
@@ -77,6 +83,7 @@ export const TasksBoardContext = createContext<{
   addTask: () => Promise.resolve(),
   updateTask: () => Promise.resolve(),
   markTaskAsDone: () => Promise.resolve(),
+  rescheduleOverdueTasks: () => Promise.resolve(),
 })
 
 namespace TasksBoardProvider {
@@ -283,6 +290,34 @@ function TasksBoardProvider({
     })
   }
 
+  async function rescheduleOverdueTasks(dueDateValue: DateValue) {
+    const overdueTasks = tasksBoard.overdue.items
+
+    const boardKey = boardKeyFactory(dueDateValue)
+
+    setTasksBoard({
+      ...tasksBoard,
+      overdue: {
+        ...tasksBoard.overdue,
+        items: [],
+      },
+      [boardKey]: {
+        ...tasksBoard[boardKey],
+        items: [
+          ...tasksBoard[boardKey].items,
+          ...overdueTasks.map(task => ({
+            ...task,
+            dueDate: dueDateValue,
+          })),
+        ],
+      },
+    })
+
+    await rescheduleOverdueTasksAction({
+      dueDate: dueDateValue.toDate(getLocalTimeZone()),
+    })
+  }
+
   return (
     <TasksBoardContext.Provider
       value={{
@@ -292,6 +327,7 @@ function TasksBoardProvider({
         addTask,
         updateTask,
         markTaskAsDone,
+        rescheduleOverdueTasks,
       }}
     >
       {children}

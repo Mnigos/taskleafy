@@ -6,6 +6,9 @@ import { Card, CardHeader } from '@nextui-org/card'
 import { Checkbox } from '@nextui-org/checkbox'
 import { cn } from '@nextui-org/theme'
 import { LuCalendarDays } from 'react-icons/lu'
+import { useState } from 'react'
+
+import { UpdateTaskModal } from './update-task-modal'
 
 import { formatDateValue, isOverdue } from '@app/board/helpers/date'
 import type { BoardKeyWithoutOverdue, PickedTask } from '@app/board/types'
@@ -27,6 +30,7 @@ function TaskCard({
   dueDate,
   index,
 }: TaskCard.Props) {
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
   const { tasksBoard, markTaskAsDone } = useTasksBoard()
 
   const dueDateValue = dueDate
@@ -34,60 +38,81 @@ function TaskCard({
     : undefined
 
   return (
-    <Draggable draggableId={id} index={index}>
-      {(
-        { innerRef, draggableProps, dragHandleProps },
-        { isDragging },
-        { source: { droppableId } }
-      ) => (
-        <Card
-          ref={innerRef}
-          {...draggableProps}
-          {...dragHandleProps}
-          className={cn(isDragging && 'opacity-50')}
-        >
-          <CardHeader className={cn(isDone && 'opacity-50')}>
-            <Checkbox
-              color="primary"
-              defaultSelected={isDone}
-              isDisabled={isDone}
+    <>
+      <Draggable draggableId={id} index={index}>
+        {(
+          { innerRef, draggableProps, dragHandleProps },
+          { isDragging },
+          { source: { droppableId } }
+        ) => (
+          <Card
+            ref={innerRef}
+            {...draggableProps}
+            {...dragHandleProps}
+            className={cn(isDragging && 'opacity-50')}
+            onClick={() => {
+              console.log('clicked')
+            }}
+          >
+            <CardHeader
+              className={cn(isDone && 'opacity-50')}
               onClick={() => {
-                const sourceKey = droppableId as BoardKeyWithoutOverdue
-                const task = tasksBoard[sourceKey].items.find(
-                  task => task.id === id
-                )
-
-                if (!isDone && task && sourceKey !== 'done')
-                  setTimeout(async () => {
-                    await markTaskAsDone(task, sourceKey)
-                  }, 500)
+                setIsUpdateModalOpen(true)
               }}
-            />
+            >
+              <Checkbox
+                color="primary"
+                defaultSelected={isDone}
+                isDisabled={isDone}
+                onClick={() => {
+                  const sourceKey = droppableId as BoardKeyWithoutOverdue
+                  const task = tasksBoard[sourceKey].items.find(
+                    task => task.id === id
+                  )
 
-            <div className="flex flex-col items-start gap-1">
-              <div>{name}</div>
+                  if (!isDone && task && sourceKey !== 'done')
+                    setTimeout(async () => {
+                      await markTaskAsDone(task, sourceKey)
+                    }, 500)
+                }}
+              />
 
-              {description && (
-                <p className="text-xs text-white/75">{description}</p>
-              )}
+              <div className="flex flex-col items-start gap-1">
+                <div>{name}</div>
 
-              {dueDate && dueDateValue && !isDone && (
-                <div
-                  className={cn(
-                    'flex items-center gap-1 text-xs',
-                    isOverdue(dueDateValue) ? 'text-danger' : 'text-primary'
-                  )}
-                >
-                  <LuCalendarDays />
+                {description && (
+                  <p className="text-xs text-white/75">{description}</p>
+                )}
 
-                  {formatDateValue(dueDateValue)}
-                </div>
-              )}
-            </div>
-          </CardHeader>
-        </Card>
-      )}
-    </Draggable>
+                {dueDate && dueDateValue && !isDone && (
+                  <div
+                    className={cn(
+                      'flex items-center gap-1 text-xs',
+                      isOverdue(dueDateValue) ? 'text-danger' : 'text-primary'
+                    )}
+                  >
+                    <LuCalendarDays />
+
+                    {formatDateValue(dueDateValue)}
+                  </div>
+                )}
+              </div>
+            </CardHeader>
+          </Card>
+        )}
+      </Draggable>
+
+      <UpdateTaskModal
+        id={id}
+        name={name}
+        description={description}
+        dueDate={dueDate}
+        isOpen={isUpdateModalOpen}
+        closeModal={() => {
+          setIsUpdateModalOpen(false)
+        }}
+      />
+    </>
   )
 }
 

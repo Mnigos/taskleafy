@@ -19,7 +19,14 @@ namespace TaskCard {
   >
 }
 
-function TaskCard({ id, name, isDone, dueDate, index }: TaskCard.Props) {
+function TaskCard({
+  id,
+  name,
+  description,
+  isDone,
+  dueDate,
+  index,
+}: TaskCard.Props) {
   const { tasksBoard, markTaskAsDone } = useTasksBoard()
 
   const dueDateValue = dueDate
@@ -39,45 +46,44 @@ function TaskCard({ id, name, isDone, dueDate, index }: TaskCard.Props) {
           {...dragHandleProps}
           className={cn(isDragging && 'opacity-50')}
         >
-          <CardHeader
-            className={cn(
-              isDone && 'opacity-50',
-              'flex flex-col items-start gap-1'
-            )}
-          >
-            <div>
-              <Checkbox
-                color="primary"
-                defaultSelected={isDone}
-                isDisabled={isDone}
-                onClick={() => {
-                  const sourceKey = droppableId as BoardKeyWithoutOverdue
-                  const task = tasksBoard[sourceKey].items.find(
-                    task => task.id === id
-                  )
+          <CardHeader className={cn(isDone && 'opacity-50')}>
+            <Checkbox
+              color="primary"
+              defaultSelected={isDone}
+              isDisabled={isDone}
+              onClick={() => {
+                const sourceKey = droppableId as BoardKeyWithoutOverdue
+                const task = tasksBoard[sourceKey].items.find(
+                  task => task.id === id
+                )
 
-                  if (!isDone && task && sourceKey !== 'done')
-                    setTimeout(() => {
-                      markTaskAsDone(task, sourceKey)
-                    }, 500)
-                }}
-              />
+                if (!isDone && task && sourceKey !== 'done')
+                  setTimeout(async () => {
+                    await markTaskAsDone(task, sourceKey)
+                  }, 500)
+              }}
+            />
 
-              {name}
+            <div className="flex flex-col items-start gap-1">
+              <div>{name}</div>
+
+              {description && (
+                <p className="text-xs text-white/75">{description}</p>
+              )}
+
+              {dueDate && dueDateValue && !isDone && (
+                <div
+                  className={cn(
+                    'flex items-center gap-1 text-xs',
+                    isOverdue(dueDateValue) ? 'text-danger' : 'text-primary'
+                  )}
+                >
+                  <LuCalendarDays />
+
+                  {formatDateValue(dueDateValue)}
+                </div>
+              )}
             </div>
-
-            {dueDate && dueDateValue && !isDone && (
-              <div
-                className={cn(
-                  'flex items-center gap-1 text-xs',
-                  isOverdue(dueDateValue) ? 'text-danger' : 'text-primary'
-                )}
-              >
-                <LuCalendarDays />
-
-                {formatDateValue(dueDateValue)}
-              </div>
-            )}
           </CardHeader>
         </Card>
       )}

@@ -20,7 +20,7 @@ function TasksBoard({ showDone }: TasksBoard.Props) {
     showDone ? true : key !== 'done'
   )
 
-  function onDragEng({ source, destination, draggableId }: DropResult) {
+  async function onDragEng({ source, destination, draggableId }: DropResult) {
     if (!destination) return
 
     if (destination.droppableId === source.droppableId) {
@@ -39,7 +39,7 @@ function TasksBoard({ showDone }: TasksBoard.Props) {
       if (destination.droppableId === 'overdue') return
 
       if (itemToDrop) {
-        changeTaskTable(itemToDrop, source, destination)
+        await changeTaskTable(itemToDrop, source, destination)
       }
     }
   }

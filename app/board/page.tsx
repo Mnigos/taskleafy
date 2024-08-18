@@ -6,11 +6,12 @@ import { TasksBoardProvider } from './context'
 import type { PageProps } from '@app/types/props'
 
 namespace BoardPage {
-  export interface Props extends PageProps {
-    readonly searchParams: {
-      'show-done'?: string
-    }
-  }
+  export type Props = PageProps &
+    Readonly<{
+      searchParams: {
+        'show-done'?: string
+      }
+    }>
 }
 
 async function BoardPage({ searchParams }: BoardPage.Props) {

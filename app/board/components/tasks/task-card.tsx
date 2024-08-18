@@ -1,18 +1,18 @@
 'use client'
 
-import { fromDate, getLocalTimeZone } from '@internationalized/date'
 import { Draggable } from '@hello-pangea/dnd'
+import { fromDate, getLocalTimeZone } from '@internationalized/date'
 import { Card, CardHeader } from '@nextui-org/card'
 import { Checkbox } from '@nextui-org/checkbox'
+import { useDisclosure } from '@nextui-org/modal'
 import { cn } from '@nextui-org/theme'
 import { LuCalendarDays } from 'react-icons/lu'
-import { useState } from 'react'
 
-import { UpdateTaskModal } from './update-task-modal'
+import { UpdateTaskModal } from './modals'
 
+import { useTasksBoard } from '@app/board/context'
 import { formatDateValue, isOverdue } from '@app/board/helpers/date'
 import type { BoardKeyWithoutOverdue, PickedTask } from '@app/board/types'
-import { useTasksBoard } from '@app/board/context'
 
 namespace TaskCard {
   export type Props = Readonly<
@@ -30,7 +30,7 @@ function TaskCard({
   dueDate,
   index,
 }: TaskCard.Props) {
-  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
+  const { onOpenChange, isOpen, onClose, onOpen } = useDisclosure()
   const { tasksBoard, markTaskAsDone } = useTasksBoard()
 
   const dueDateValue = dueDate
@@ -54,12 +54,7 @@ function TaskCard({
               console.log('clicked')
             }}
           >
-            <CardHeader
-              className={cn(isDone && 'opacity-50')}
-              onClick={() => {
-                setIsUpdateModalOpen(true)
-              }}
-            >
+            <CardHeader className={cn(isDone && 'opacity-50')} onClick={onOpen}>
               <Checkbox
                 color="primary"
                 defaultSelected={isDone}
@@ -107,10 +102,9 @@ function TaskCard({
         name={name}
         description={description}
         dueDate={dueDate}
-        isOpen={isUpdateModalOpen}
-        closeModal={() => {
-          setIsUpdateModalOpen(false)
-        }}
+        isOpen={isOpen}
+        onClose={onClose}
+        onOpenChange={onOpenChange}
       />
     </>
   )

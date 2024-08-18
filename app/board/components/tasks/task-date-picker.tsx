@@ -10,15 +10,13 @@ import { CalendarPresets } from '../misc'
 
 import { now } from '@app/board/helpers/date'
 
-namespace AddTaskModalDatePicker {
+namespace TaskDatePicker {
   export type Props = Readonly<{
     defaultValue?: DateValue
   }>
 }
 
-function AddTaskModalDatePicker({
-  defaultValue,
-}: AddTaskModalDatePicker.Props) {
+function TaskDatePicker({ defaultValue }: TaskDatePicker.Props) {
   const [dueDateValue, setDueDateValue] = useState<DateValue | undefined>(
     defaultValue
   )
@@ -62,4 +60,4 @@ function AddTaskModalDatePicker({
   )
 }
 
-export { AddTaskModalDatePicker }
+export { TaskDatePicker }

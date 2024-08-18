@@ -1,9 +1,6 @@
 import { getTasks } from './actions'
-import {
-  AddTaskModal,
-  ShowDoneTasksCheckbox,
-  TasksBoard,
-} from './components/tasks'
+import { ShowDoneTasksCheckbox, TasksBoard } from './components/tasks'
+import { AddTaskModal } from './components/tasks/modals'
 import { TasksBoardProvider } from './context'
 
 import type { PageProps } from '@app/types/props'

@@ -1,3 +1,5 @@
+'use client'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   fromDate,
@@ -12,70 +14,71 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  useDisclosure,
 } from '@nextui-org/modal'
-import type { Task } from '@prisma/client'
 import { useState, type FormEvent } from 'react'
 import { useForm } from 'react-hook-form'
-import type { SetOptional } from 'type-fest'
 import { z } from 'zod'
 
-import { AddTaskModalDatePicker } from './add-task-modal-date-picker'
+import { TaskDatePicker } from '../task-date-picker'
 
 import { now } from '@app/board/helpers/date'
-import { useTasksBoard } from '@app/board/context'
 
-const updateTaskSchema = z.object({
-  name: z.string().min(3).optional(),
+const taskSchema = z.object({
+  name: z.string().min(3),
   description: z.string().optional(),
   dueDate: z.coerce.date().min(now.toDate(getLocalTimeZone())).optional(),
 })
 
-namespace UpdateTaskModal {
-  export type Props = Readonly<
-    SetOptional<
-      Pick<Task, 'name' | 'description' | 'dueDate' | 'id'>,
-      'dueDate' | 'description' | 'name'
-    > & {
-      isOpen: boolean
-      closeModal: () => void
-    }
-  >
+export type TaskSchema = z.infer<typeof taskSchema>
+
+namespace TaskModal {
+  export type Props = Readonly<{
+    isOpen: boolean
+    onClose: () => void
+    onOpenChange: () => void
+    name?: string | null
+    description?: string | null
+    dueDate?: Date | null
+    formAction: (data: TaskSchema) => Promise<void>
+  }>
 }
 
-function UpdateTaskModal({
-  id,
+function TaskModal({
+  isOpen,
+  onClose,
+  onOpenChange,
   name,
   description,
   dueDate,
-  isOpen,
-  closeModal,
-}: UpdateTaskModal.Props) {
+  formAction,
+}: TaskModal.Props) {
   const [isLoadingSubmit, setIsLoadingSubmit] = useState(false)
-  const { onOpenChange } = useDisclosure()
   const {
     register,
     formState: { errors, isValid },
     reset,
-  } = useForm<z.infer<typeof updateTaskSchema>>({
+  } = useForm<TaskSchema>({
     mode: 'onBlur',
     reValidateMode: 'onChange',
-    resolver: zodResolver(updateTaskSchema),
+    resolver: zodResolver(taskSchema),
   })
-  const { updateTask } = useTasksBoard()
 
-  async function formAction(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const formData = new FormData(event.currentTarget)
 
     const dueDateFormValue = formData.get('dueDate')?.toString()
 
+    console.log(dueDateFormValue)
+
     const dueDateValue = dueDateFormValue
-      ? parseZonedDateTime(dueDateFormValue).toDate()
+      ? dueDateFormValue.includes('[')
+        ? parseZonedDateTime(dueDateFormValue).toDate()
+        : new Date(dueDateFormValue)
       : undefined
 
-    const data = updateTaskSchema.parse({
+    const data = taskSchema.parse({
       name: formData.get('name'),
       description: formData.get('description'),
       ...(dueDateValue === dueDate ? {} : { dueDate: dueDateValue }),
@@ -83,29 +86,29 @@ function UpdateTaskModal({
 
     setIsLoadingSubmit(true)
 
-    await updateTask({ id, data })
+    await formAction(data)
 
     reset()
 
     setIsLoadingSubmit(false)
 
-    closeModal()
+    onClose()
   }
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} onClose={closeModal}>
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose}>
       <ModalContent>
         {() => (
           <>
             <ModalHeader className="flex flex-col gap-1">Add task</ModalHeader>
 
-            <form onSubmit={formAction}>
+            <form onSubmit={handleSubmit}>
               <ModalBody>
                 <Input
                   label="Task name"
                   isRequired
                   {...register('name')}
-                  defaultValue={name}
+                  defaultValue={name ?? undefined}
                   isInvalid={!!errors.name}
                   errorMessage={errors.name?.message?.toString()}
                   variant="bordered"
@@ -118,7 +121,7 @@ function UpdateTaskModal({
                   variant="bordered"
                 />
 
-                <AddTaskModalDatePicker
+                <TaskDatePicker
                   defaultValue={
                     dueDate ? fromDate(dueDate, getLocalTimeZone()) : undefined
                   }
@@ -126,7 +129,7 @@ function UpdateTaskModal({
               </ModalBody>
 
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={closeModal}>
+                <Button color="danger" variant="light" onPress={onClose}>
                   Close
                 </Button>
 
@@ -136,7 +139,7 @@ function UpdateTaskModal({
                   isDisabled={!isValid}
                   isLoading={isLoadingSubmit}
                 >
-                  Update
+                  {name ? 'Update' : 'Add'}
                 </Button>
               </ModalFooter>
             </form>
@@ -147,4 +150,4 @@ function UpdateTaskModal({
   )
 }
 
-export { UpdateTaskModal }
+export { TaskModal }

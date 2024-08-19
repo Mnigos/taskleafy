@@ -70,8 +70,6 @@ function TaskModal({
 
     const dueDateFormValue = formData.get('dueDate')?.toString()
 
-    console.log(dueDateFormValue)
-
     const dueDateValue = dueDateFormValue
       ? dueDateFormValue.includes('[')
         ? parseZonedDateTime(dueDateFormValue).toDate()

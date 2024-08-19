@@ -70,6 +70,7 @@ model Task {
   updatedAt   DateTime  @updatedAt
   isDone      Boolean   @default(false)
   userId      String
+  order       Int?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

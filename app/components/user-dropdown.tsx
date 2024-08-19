@@ -13,9 +13,9 @@ import type { User } from 'next-auth'
 import { signOutAction } from '@app/auth/actions'
 
 namespace UserDropdown {
-  export interface Props {
+  export type Props = Readonly<{
     user: User
-  }
+  }>
 }
 
 function UserDropdown({ user }: UserDropdown.Props) {
@@ -47,7 +47,7 @@ function UserDropdown({ user }: UserDropdown.Props) {
             key={item.key}
             color={item.key === 'sign-out' ? 'danger' : 'default'}
             className={item.key === 'sign-out' ? 'text-danger' : ''}
-            onClick={async () => signOutAction()}
+            onClick={() => signOutAction()}
           >
             {item.label}
           </DropdownItem>

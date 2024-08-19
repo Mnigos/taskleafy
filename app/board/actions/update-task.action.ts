@@ -7,15 +7,16 @@ import { prisma } from '@app/db'
 
 export interface UpdateTaskParams {
   id: Task['id']
-  data: Omit<Partial<Task>, 'id' | 'userId' | 'createdAt' | 'updatedAt'>
+  data: Partial<Omit<Task, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>
 }
 
 export async function updateTask({ id, data }: UpdateTaskParams) {
-  await getServerUser()
+  const { id: userId } = await getServerUser()
 
   return prisma.task.update({
     where: {
       id,
+      userId,
     },
     data,
   })

@@ -10,13 +10,14 @@ export interface RescheduleOverdueTasksParams {
 export async function rescheduleOverdueTasks({
   dueDate,
 }: RescheduleOverdueTasksParams) {
-  await getServerUser()
+  const { id: userId } = await getServerUser()
 
   return prisma.task.updateMany({
     where: {
       dueDate: {
         lt: new Date(),
       },
+      userId,
     },
     data: {
       dueDate,

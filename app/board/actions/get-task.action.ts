@@ -6,11 +6,12 @@ import { getServerUser } from '@app/auth/helpers'
 import { prisma } from '@app/db'
 
 export async function getTask(id: Task['id']) {
-  await getServerUser()
+  const { id: userId } = await getServerUser()
 
   return prisma.task.findUnique({
     where: {
       id,
+      userId,
     },
   })
 }

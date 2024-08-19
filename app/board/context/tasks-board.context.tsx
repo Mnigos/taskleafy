@@ -13,8 +13,8 @@ import { createContext, useContext, useState } from 'react'
 import {
   addTask as addTaskAction,
   getTask,
-  updateTask as updateTaskAction,
   rescheduleOverdueTasks as rescheduleOverdueTasksAction,
+  updateTask as updateTaskAction,
   type UpdateTaskParams,
 } from '@app/board/actions'
 import {
@@ -29,7 +29,7 @@ import type {
   BoardKeyWithoutOverdue,
   TasksBoard,
 } from '@app/board/types'
-import { addAndReorder, reorder } from '@app/utils/reorder'
+import { addAndReorder, initialReorder, reorder } from '@app/utils/reorder'
 
 export const TasksBoardContext = createContext<{
   tasksBoard: TasksBoard
@@ -37,7 +37,7 @@ export const TasksBoardContext = createContext<{
     boardKey: BoardKeyWithoutOverdue,
     sourceIndex: number,
     destinationIndex: number
-  ) => void
+  ) => Promise<void>
   changeTaskTable: (
     task: Task,
     source: DraggableLocation,
@@ -78,7 +78,7 @@ export const TasksBoardContext = createContext<{
       items: [],
     },
   },
-  reorderTasks: () => {},
+  reorderTasks: () => Promise.resolve(),
   changeTaskTable: () => Promise.resolve(),
   addTask: () => Promise.resolve(),
   updateTask: () => Promise.resolve(),
@@ -98,58 +98,58 @@ function TasksBoardProvider({
 }: TasksBoardProvider.Props) {
   const { data: tasks } = useTasksQuery(initialTasks)
 
-  const overdueTasks = tasks.filter(
-    task =>
-      task.dueDate &&
-      !task.isDone &&
-      fromDate(task.dueDate, getLocalTimeZone()).day < now.day
-  )
-  const todayTasks = tasks.filter(
-    task =>
-      task.dueDate &&
-      !task.isDone &&
-      fromDate(task.dueDate, getLocalTimeZone()).day === now.day
-  )
-  const tomorrowTasks = tasks.filter(
-    task =>
-      task.dueDate &&
-      !task.isDone &&
-      fromDate(task.dueDate, getLocalTimeZone()).day === tomorrow.day
-  )
-  const noDateTasks = tasks.filter(task => !task.dueDate && !task.isDone)
-  const doneTasks = tasks.filter(task => task.isDone)
-
-  const initialTasksBoard: TasksBoard = {
+  const [tasksBoard, setTasksBoard] = useState<TasksBoard>({
     overdue: {
       id: 'overdue',
       header: 'Overdue',
-      items: overdueTasks,
+      items: initialReorder(
+        tasks.filter(
+          task =>
+            task.dueDate &&
+            !task.isDone &&
+            fromDate(task.dueDate, getLocalTimeZone()).day < now.day
+        )
+      ),
     },
     today: {
       id: 'today',
       header: 'Today',
-      items: todayTasks,
+      items: initialReorder(
+        tasks.filter(
+          task =>
+            task.dueDate &&
+            !task.isDone &&
+            fromDate(task.dueDate, getLocalTimeZone()).day === now.day
+        )
+      ),
     },
     tomorrow: {
       id: 'tomorrow',
       header: 'Tomorrow',
-      items: tomorrowTasks,
+      items: initialReorder(
+        tasks.filter(
+          task =>
+            task.dueDate &&
+            !task.isDone &&
+            fromDate(task.dueDate, getLocalTimeZone()).day === tomorrow.day
+        )
+      ),
     },
     noDate: {
       id: 'noDate',
       header: 'No date',
-      items: noDateTasks,
+      items: initialReorder(
+        tasks.filter(task => !task.dueDate && !task.isDone)
+      ),
     },
     done: {
       id: 'done',
       header: 'Done',
-      items: doneTasks,
+      items: initialReorder(tasks.filter(task => task.isDone)),
     },
-  }
+  })
 
-  const [tasksBoard, setTasksBoard] = useState(initialTasksBoard)
-
-  function reorderTasks(
+  async function reorderTasks(
     boardKey: BoardKeyWithoutOverdue,
     sourceIndex: number,
     destinationIndex: number
@@ -165,6 +165,16 @@ function TasksBoardProvider({
         ),
       },
     })
+
+    const task = tasksBoard[boardKey].items[sourceIndex]
+
+    if (task)
+      await updateTaskAction({
+        id: task.id,
+        data: {
+          order: destinationIndex,
+        },
+      })
   }
 
   async function changeTaskTable(
@@ -205,7 +215,10 @@ function TasksBoardProvider({
 
     await updateTaskAction({
       id: task.id,
-      data: updatedData,
+      data: {
+        ...updatedData,
+        order: destination.index,
+      },
     })
   }
 

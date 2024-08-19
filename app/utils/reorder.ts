@@ -22,3 +22,19 @@ export function addAndReorder<T>(
 
   return result
 }
+
+export function initialReorder<T extends { order?: number | null }>(
+  items: T[]
+) {
+  const result = [...items]
+
+  for (const [index, item] of items.entries()) {
+    if (item.order) {
+      result.splice(index, 1)
+
+      result.splice(item.order, 0, item)
+    }
+  }
+
+  return result
+}

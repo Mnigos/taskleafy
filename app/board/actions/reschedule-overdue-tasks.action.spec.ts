@@ -26,7 +26,7 @@ describe('RescheduleOverdueTasksAction', () => {
     expect(updateManySpy).toHaveBeenCalledWith({
       where: {
         dueDate: {
-          lt: new Date(),
+          lt: expect.any(Date),
         },
         userId,
       },

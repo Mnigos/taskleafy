@@ -50,9 +50,6 @@ function TaskCard({
             {...draggableProps}
             {...dragHandleProps}
             className={cn(isDragging && 'opacity-50')}
-            onClick={() => {
-              console.log('clicked')
-            }}
           >
             <CardHeader className={cn(isDone && 'opacity-50')} onClick={onOpen}>
               <Checkbox

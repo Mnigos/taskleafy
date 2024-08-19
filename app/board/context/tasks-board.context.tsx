@@ -307,7 +307,7 @@ function TasksBoardProvider({
           ...tasksBoard[boardKey].items,
           ...overdueTasks.map(task => ({
             ...task,
-            dueDate: dueDateValue,
+            dueDate: dueDateValue.toDate(getLocalTimeZone()),
           })),
         ],
       },

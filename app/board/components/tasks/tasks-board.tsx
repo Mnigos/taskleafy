@@ -24,7 +24,7 @@ function TasksBoard({ showDone }: TasksBoard.Props) {
     if (!destination) return
 
     if (destination.droppableId === source.droppableId) {
-      reorderTasks(
+      await reorderTasks(
         source.droppableId as BoardKeyWithoutOverdue,
         source.index,
         destination.index

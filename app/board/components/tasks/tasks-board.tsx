@@ -1,6 +1,7 @@
 'use client'
 
 import { DragDropContext, Droppable, type DropResult } from '@hello-pangea/dnd'
+import { Fragment } from 'react'
 
 import { TasksList } from './tasks-list'
 
@@ -48,14 +49,18 @@ function TasksBoard({ showDone }: TasksBoard.Props) {
     <>
       <DragDropContext onDragEnd={onDragEng}>
         {tasksBoardEntries.map(([id, { header, items }]) => (
-          <Droppable key={id} droppableId={id}>
-            {({ droppableProps, innerRef, placeholder }) => (
-              <div ref={innerRef} {...droppableProps}>
-                <TasksList tasks={items} header={header} />
-                {placeholder}
-              </div>
+          <Fragment key={id}>
+            {items.length > 0 && (
+              <Droppable droppableId={id}>
+                {({ droppableProps, innerRef, placeholder }) => (
+                  <div ref={innerRef} {...droppableProps}>
+                    <TasksList tasks={items} header={header} />
+                    {placeholder}
+                  </div>
+                )}
+              </Droppable>
             )}
-          </Droppable>
+          </Fragment>
         ))}
       </DragDropContext>
     </>

@@ -17,6 +17,8 @@ jobs:
 
       - name: Setup 👨🏻‍💻
         uses: ./.github/actions/setup
+        with:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Build Application 🧱
         run: bun run build
@@ -37,6 +39,8 @@ jobs:
 
       - name: Setup 👨🏻‍💻
         uses: ./.github/actions/setup
+        with:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Lint JS files 🐱
         run: bun run lint
@@ -57,6 +61,8 @@ jobs:
 
       - name: Setup 👨🏻‍💻
         uses: ./.github/actions/setup
+        with:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Run unit tests 🧪
         run: bun run test:coverage

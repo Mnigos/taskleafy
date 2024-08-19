@@ -1,5 +1,12 @@
 name: 'Setup Node Env, Get & Cache Dependencies'
 description: 'Setup Node Env, Get & Cache Dependencies(via yarn) for faster builds'
+on:
+  workflow_call:
+    inputs:
+      DATABASE_URL:
+        required: true
+        type: string
+
 runs:
   using: 'composite'
   steps:
@@ -17,3 +24,9 @@ runs:
       if: steps.cache-node-modules.outputs.cache-hit != 'true'
       run: bun install
       shell: bash
+
+    - name: Run Migrations 🚀
+      run: bun run prisma:migrate
+      shell: bash
+      env:
+        DATABASE_URL: ${{ inputs.DATABASE_URL }}

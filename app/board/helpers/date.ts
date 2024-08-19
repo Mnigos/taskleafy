@@ -55,6 +55,7 @@ export function dueDateFactory(
 export function boardKeyFactory(date: DateValue) {
   if (date.day === now.day) return 'today'
   if (date.day === tomorrow.day) return 'tomorrow'
+  if (date.day === yesterday.day) return 'overdue'
 
   return 'noDate'
 }

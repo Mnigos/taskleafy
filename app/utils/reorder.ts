@@ -29,7 +29,7 @@ export function initialReorder<T extends { order?: number | null }>(
   const result = [...items]
 
   for (const [index, item] of items.entries()) {
-    if (item.order) {
+    if (item.order && item.order !== index && item.order <= result.length) {
       result.splice(index, 1)
 
       result.splice(item.order, 0, item)

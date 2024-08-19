@@ -273,7 +273,7 @@ function TasksBoardProvider({
         ...tasksBoard,
         [oldBoardKey]: {
           ...tasksBoard[oldBoardKey],
-          items: tasksBoard[oldBoardKey].items.filter(({ id }) => id !== id),
+          items: tasksBoard[oldBoardKey].items.filter(task => task.id !== id),
         },
         [boardKey]: {
           ...tasksBoard[boardKey],

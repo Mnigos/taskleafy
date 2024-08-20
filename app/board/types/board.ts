@@ -1,6 +1,13 @@
 import type { Task } from '@prisma/client'
 
-export type BoardKey = 'today' | 'tomorrow' | 'noDate' | 'done' | 'overdue'
+export type BoardKey =
+  | 'today'
+  | 'tomorrow'
+  | 'noDate'
+  | 'done'
+  | 'overdue'
+  | 'nextWeek'
+  | 'future'
 export type BoardKeyWithoutOverdue = Exclude<BoardKey, 'overdue'>
 
 export type TasksBoard = Record<

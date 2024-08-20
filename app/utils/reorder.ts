@@ -28,14 +28,13 @@ export function initialReorder<T extends { order?: number | null }>(
 ) {
   const result = [...items]
 
-  for (const [index, item] of items.entries()) {
-    if (
-      typeof item.order === 'number' &&
-      item.order !== index &&
-      item.order <= result.length
-    ) {
-      result.splice(index, 1)
+  for (const item of items) {
+    if (typeof item.order === 'number' && item.order <= result.length) {
+      const index = result.findIndex(({ order }) => order === item.order)
 
+      if (index === item.order) continue
+
+      result.splice(index, 1)
       result.splice(item.order, 0, item)
     }
   }

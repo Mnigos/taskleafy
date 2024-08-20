@@ -32,10 +32,6 @@ export function formatDateValue(date: DateValue) {
       return 'Next week'
     }
 
-    case date.compare(nextWeek.add({ days: 7 })) > 0: {
-      return 'Future'
-    }
-
     default: {
       return new DateFormatter('en-US', {
         day: 'numeric',

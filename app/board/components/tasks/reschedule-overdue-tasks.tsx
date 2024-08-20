@@ -18,9 +18,7 @@ export function RescheduleOverdueTasks() {
 
   useEffect(() => {
     if (dueDateValue) {
-      rescheduleOverdueTasks(dueDateValue).catch((error: unknown) => {
-        console.error(error)
-      })
+      void rescheduleOverdueTasks(dueDateValue)
       setDueDateValue(undefined)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

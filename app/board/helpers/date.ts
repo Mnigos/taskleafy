@@ -14,17 +14,26 @@ export const tomorrow = now.add({ days: 1 })
 export const nextWeek = startOfWeek(now.add({ weeks: 1 }), 'en-US')
 
 export function formatDateValue(date: DateValue) {
-  switch (date.day) {
-    case now.day: {
+  switch (true) {
+    case date.compare(now) === 0: {
       return 'Today'
     }
 
-    case tomorrow.day: {
+    case date.compare(tomorrow) === 0: {
       return 'Tomorrow'
     }
 
-    case yesterday.day: {
+    case date.compare(yesterday) === 0: {
       return 'Yesterday'
+    }
+
+    case date.compare(nextWeek) >= 0 &&
+      date.compare(nextWeek.add({ days: 7 })) < 0: {
+      return 'Next week'
+    }
+
+    case date.compare(nextWeek.add({ days: 7 })) > 0: {
+      return 'Future'
     }
 
     default: {
@@ -45,6 +54,12 @@ export function dueDateFactory(
     }
     case 'tomorrow': {
       return tomorrow.toDate(getLocalTimeZone())
+    }
+    case 'nextWeek': {
+      return nextWeek.toDate(getLocalTimeZone())
+    }
+    case 'future': {
+      return nextWeek.add({ days: 8 }).toDate(getLocalTimeZone())
     }
     case 'noDate': {
       return null

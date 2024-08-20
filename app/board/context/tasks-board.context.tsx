@@ -20,6 +20,7 @@ import {
 import {
   boardKeyFactory,
   dueDateFactory,
+  nextWeek,
   now,
   tomorrow,
 } from '@app/board/helpers/date'
@@ -67,6 +68,16 @@ export const TasksBoardContext = createContext<{
       header: 'Tomorrow',
       items: [],
     },
+    nextWeek: {
+      id: 'nextWeek',
+      header: 'Next week',
+      items: [],
+    },
+    future: {
+      id: 'future',
+      header: 'Future',
+      items: [],
+    },
     noDate: {
       id: 'noDate',
       header: 'No date',
@@ -107,7 +118,7 @@ function TasksBoardProvider({
           task =>
             task.dueDate &&
             !task.isDone &&
-            fromDate(task.dueDate, getLocalTimeZone()).day < now.day
+            fromDate(task.dueDate, getLocalTimeZone()).compare(now) < 0
         )
       ),
     },
@@ -119,7 +130,7 @@ function TasksBoardProvider({
           task =>
             task.dueDate &&
             !task.isDone &&
-            fromDate(task.dueDate, getLocalTimeZone()).day === now.day
+            fromDate(task.dueDate, getLocalTimeZone()).compare(now) === 0
         )
       ),
     },
@@ -131,7 +142,36 @@ function TasksBoardProvider({
           task =>
             task.dueDate &&
             !task.isDone &&
-            fromDate(task.dueDate, getLocalTimeZone()).day === tomorrow.day
+            fromDate(task.dueDate, getLocalTimeZone()).compare(tomorrow) === 0
+        )
+      ),
+    },
+    nextWeek: {
+      id: 'nextWeek',
+      header: 'Next week',
+      items: initialReorder(
+        tasks.filter(
+          task =>
+            task.dueDate &&
+            !task.isDone &&
+            fromDate(task.dueDate, getLocalTimeZone()).compare(nextWeek) >= 0 &&
+            fromDate(task.dueDate, getLocalTimeZone()).compare(
+              nextWeek.add({ days: 7 })
+            ) < 0
+        )
+      ),
+    },
+    future: {
+      id: 'future',
+      header: 'Future',
+      items: initialReorder(
+        tasks.filter(
+          task =>
+            task.dueDate &&
+            !task.isDone &&
+            fromDate(task.dueDate, getLocalTimeZone()).compare(
+              nextWeek.add({ days: 7 })
+            ) > 0
         )
       ),
     },

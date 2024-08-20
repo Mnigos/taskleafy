@@ -1,0 +1,154 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`UserDropdown > should match snapshot 1`] = `
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <button
+        aria-expanded="false"
+        aria-haspopup="true"
+        class="group relative justify-center box-border appearance-none select-none whitespace-nowrap font-normal overflow-hidden tap-highlight-transparent data-[pressed=true]:scale-[0.97] outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 border-medium px-4 min-w-20 h-10 text-small rounded-medium [&>svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none bg-transparent border-default text-foreground data-[hover=true]:opacity-hover z-10 aria-expanded:scale-[0.97] aria-expanded:opacity-70 subpixel-antialiased flex items-center gap-2"
+        data-slot="trigger"
+        id="react-aria-:r0:"
+        type="button"
+      >
+        <p>
+          John Doe
+        </p>
+        <span
+          class="flex relative justify-center items-center box-border overflow-hidden align-middle z-0 outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 w-8 h-8 text-tiny bg-default text-default-foreground rounded-full"
+          tabindex="-1"
+        >
+          <img
+            alt="avatar"
+            class="flex object-cover w-full h-full transition-opacity !duration-500 data-[loaded=true]:opacity-100 opacity-100"
+            src="function(...s) {
+    let r = I(t);
+    r.called = !0, r.callCount++, r.calls.push(s);
+    let R = r.next.shift();
+    if (R) {
+      r.results.push(R);
+      let [o, l] = R;
+      if (o === "ok")
+        return l;
+      throw l;
+    }
+    let i, c = "ok", a = r.results.length;
+    if (r.impl)
+      try {
+        new.target ? i = Reflect.construct(r.impl, s, new.target) : i = r.impl.apply(this, s), c = "ok";
+      } catch (o) {
+        throw i = o, c = "error", r.results.push([c, o]), o;
+      }
+    let S = [c, i];
+    return w(i) && i.then(
+      (o) => r.resolves[a] = ["ok", o],
+      (o) => r.resolves[a] = ["error", o]
+    ), r.results.push(S), i;
+  }"
+          />
+        </span>
+      </button>
+    </div>
+  </body>,
+  "container": <div>
+    <button
+      aria-expanded="false"
+      aria-haspopup="true"
+      class="group relative justify-center box-border appearance-none select-none whitespace-nowrap font-normal overflow-hidden tap-highlight-transparent data-[pressed=true]:scale-[0.97] outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 border-medium px-4 min-w-20 h-10 text-small rounded-medium [&>svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none bg-transparent border-default text-foreground data-[hover=true]:opacity-hover z-10 aria-expanded:scale-[0.97] aria-expanded:opacity-70 subpixel-antialiased flex items-center gap-2"
+      data-slot="trigger"
+      id="react-aria-:r0:"
+      type="button"
+    >
+      <p>
+        John Doe
+      </p>
+      <span
+        class="flex relative justify-center items-center box-border overflow-hidden align-middle z-0 outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 w-8 h-8 text-tiny bg-default text-default-foreground rounded-full"
+        tabindex="-1"
+      >
+        <img
+          alt="avatar"
+          class="flex object-cover w-full h-full transition-opacity !duration-500 data-[loaded=true]:opacity-100 opacity-100"
+          src="function(...s) {
+    let r = I(t);
+    r.called = !0, r.callCount++, r.calls.push(s);
+    let R = r.next.shift();
+    if (R) {
+      r.results.push(R);
+      let [o, l] = R;
+      if (o === "ok")
+        return l;
+      throw l;
+    }
+    let i, c = "ok", a = r.results.length;
+    if (r.impl)
+      try {
+        new.target ? i = Reflect.construct(r.impl, s, new.target) : i = r.impl.apply(this, s), c = "ok";
+      } catch (o) {
+        throw i = o, c = "error", r.results.push([c, o]), o;
+      }
+    let S = [c, i];
+    return w(i) && i.then(
+      (o) => r.resolves[a] = ["ok", o],
+      (o) => r.resolves[a] = ["error", o]
+    ), r.results.push(S), i;
+  }"
+        />
+      </span>
+    </button>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;

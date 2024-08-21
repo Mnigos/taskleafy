@@ -69,12 +69,21 @@ describe('DateHelpers', () => {
       expect(boardKeyFactory(tomorrow)).toEqual('tomorrow')
     })
 
-    test('should return "noDate" for yesterday', () => {
+    test('should return "thisWeek" for tomorrow plus one day', () => {
+      expect(boardKeyFactory(tomorrow.add({ days: 1 }))).toEqual('thisWeek')
+    })
+
+    test('should return "nextWeek" for next week', () => {
+      expect(boardKeyFactory(nextWeek)).toEqual('nextWeek')
+    })
+
+    test('should return "overdue" for yesterday', () => {
       expect(boardKeyFactory(yesterday)).toEqual('overdue')
     })
 
-    test('should return "noDate" for other dates', () => {
-      expect(boardKeyFactory(customDateValue)).toEqual('noDate')
+    test('should return "noDate" for other nullish values', () => {
+      expect(boardKeyFactory(null)).toEqual('noDate')
+      expect(boardKeyFactory(undefined)).toEqual('noDate')
     })
   })
 

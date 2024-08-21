@@ -18,6 +18,7 @@ import {
 import { useState, type FormEvent } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { isMobile } from 'react-device-detect'
 
 import { TaskDatePicker } from '../task-date-picker'
 
@@ -94,7 +95,12 @@ function TaskModal({
   }
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose}>
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      onClose={onClose}
+      placement={isMobile ? 'top-center' : 'center'}
+    >
       <ModalContent>
         {() => (
           <>

@@ -26,6 +26,8 @@ jobs:
           DATABASE_URL: url
           AUTH_DISCORD_ID: secret
           AUTH_DISCORD_SECRET: secret
+          AUTH_GITHUB_ID: secret
+          AUTH_GITHUB_SECRET: secret
           AUTH_SECRET: secret
 
   lint:
@@ -48,6 +50,8 @@ jobs:
           DATABASE_URL: url
           AUTH_DISCORD_ID: secret
           AUTH_DISCORD_SECRET: secret
+          AUTH_GITHUB_ID: secret
+          AUTH_GITHUB_SECRET: secret
           AUTH_SECRET: secret
 
   test:

@@ -1,8 +1,9 @@
 import type { NextAuthConfig } from 'next-auth'
 import Discord from 'next-auth/providers/discord'
+import Github from 'next-auth/providers/github'
 
 export const nextAuthConfig: NextAuthConfig = {
-  providers: [Discord],
+  providers: [Discord, Github],
   callbacks: {
     jwt({ token, user }) {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

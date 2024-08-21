@@ -6,6 +6,7 @@ export type BoardKey =
   | 'noDate'
   | 'done'
   | 'overdue'
+  | 'thisWeek'
   | 'nextWeek'
   | 'future'
 export type BoardKeyWithoutOverdue = Exclude<BoardKey, 'overdue'>

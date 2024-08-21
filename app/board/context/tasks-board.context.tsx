@@ -70,6 +70,11 @@ export const TasksBoardContext = createContext<{
       header: 'Tomorrow',
       items: [],
     },
+    thisWeek: {
+      id: 'thisWeek',
+      header: 'This week',
+      items: [],
+    },
     nextWeek: {
       id: 'nextWeek',
       header: 'Next week',
@@ -149,6 +154,21 @@ function TasksBoardProvider({
             fromDate(task.dueDate, getLocalTimeZone()).compare(
               tomorrow.add({ days: 1 })
             ) < 0
+        )
+      ),
+    },
+    thisWeek: {
+      id: 'thisWeek',
+      header: 'This week',
+      items: initialReorder(
+        tasks.filter(
+          task =>
+            task.dueDate &&
+            !task.isDone &&
+            fromDate(task.dueDate, getLocalTimeZone()).compare(
+              tomorrow.add({ days: 1 })
+            ) >= 0 &&
+            fromDate(task.dueDate, getLocalTimeZone()).compare(nextWeek) < 0
         )
       ),
     },
@@ -271,9 +291,7 @@ function TasksBoardProvider({
   async function addTask(data: AddTask) {
     const newTask = await addTaskAction(data)
 
-    const boardKey = data.dueDate
-      ? boardKeyFactory(fromDate(data.dueDate as Date, getLocalTimeZone()))
-      : 'noDate'
+    const boardKey = boardKeyFactory(data.dueDate)
 
     setTasksBoard({
       ...tasksBoard,
@@ -296,12 +314,8 @@ function TasksBoardProvider({
       data,
     })
 
-    const oldBoardKey = oldDueDate
-      ? boardKeyFactory(fromDate(oldDueDate, getLocalTimeZone()))
-      : 'noDate'
-    const boardKey = data.dueDate
-      ? boardKeyFactory(fromDate(data.dueDate, getLocalTimeZone()))
-      : 'noDate'
+    const oldBoardKey = boardKeyFactory(oldDueDate)
+    const boardKey = boardKeyFactory(data.dueDate)
 
     if (oldBoardKey === boardKey)
       setTasksBoard({

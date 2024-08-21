@@ -33,6 +33,7 @@ import type {
 import { addAndReorder, initialReorder, reorder } from '@app/utils/reorder'
 
 export const TasksBoardContext = createContext<{
+  tasks: Task[]
   tasksBoard: TasksBoard
   reorderTasks: (
     boardKey: BoardKeyWithoutOverdue,
@@ -52,6 +53,7 @@ export const TasksBoardContext = createContext<{
   ) => Promise<void>
   rescheduleOverdueTasks: (dueDateValue: DateValue) => Promise<void>
 }>({
+  tasks: [],
   tasksBoard: {
     overdue: {
       id: 'overdue',
@@ -130,7 +132,8 @@ function TasksBoardProvider({
           task =>
             task.dueDate &&
             !task.isDone &&
-            fromDate(task.dueDate, getLocalTimeZone()).compare(now) === 0
+            fromDate(task.dueDate, getLocalTimeZone()).compare(now) >= 0 &&
+            fromDate(task.dueDate, getLocalTimeZone()).compare(tomorrow) < 0
         )
       ),
     },
@@ -142,7 +145,10 @@ function TasksBoardProvider({
           task =>
             task.dueDate &&
             !task.isDone &&
-            fromDate(task.dueDate, getLocalTimeZone()).compare(tomorrow) === 0
+            fromDate(task.dueDate, getLocalTimeZone()).compare(tomorrow) >= 0 &&
+            fromDate(task.dueDate, getLocalTimeZone()).compare(
+              tomorrow.add({ days: 1 })
+            ) < 0
         )
       ),
     },
@@ -374,6 +380,7 @@ function TasksBoardProvider({
   return (
     <TasksBoardContext.Provider
       value={{
+        tasks,
         tasksBoard,
         reorderTasks,
         changeTaskTable,

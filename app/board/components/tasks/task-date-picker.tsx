@@ -27,7 +27,17 @@ function TaskDatePicker({ defaultValue }: TaskDatePicker.Props) {
       name="dueDate"
       variant="bordered"
       value={dueDateValue}
+      onChange={setDueDateValue}
       minValue={now}
+      errorMessage={({
+        validationDetails,
+        validationErrors: [validationError],
+      }) => {
+        if (validationDetails.rangeUnderflow)
+          return 'The date cannot be in the past'
+
+        return validationError
+      }}
       calendarProps={{
         focusedValue: dueDateValue,
         onFocusChange: setDueDateValue,

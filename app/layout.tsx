@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.className}>
-      <body className="min-h-screen pb-5 dark">
+      <body className="min-h-screen bg-background pb-5 dark">
         <RootProviders>
           <NavigationBar />
           <div className="flex min-h-screen justify-center">

@@ -33,7 +33,6 @@ import type {
 import { addAndReorder, initialReorder, reorder } from '@app/utils/reorder'
 
 export const TasksBoardContext = createContext<{
-  tasks: Task[]
   tasksBoard: TasksBoard
   reorderTasks: (
     boardKey: BoardKeyWithoutOverdue,
@@ -53,7 +52,6 @@ export const TasksBoardContext = createContext<{
   ) => Promise<void>
   rescheduleOverdueTasks: (dueDateValue: DateValue) => Promise<void>
 }>({
-  tasks: [],
   tasksBoard: {
     overdue: {
       id: 'overdue',
@@ -394,7 +392,6 @@ function TasksBoardProvider({
   return (
     <TasksBoardContext.Provider
       value={{
-        tasks,
         tasksBoard,
         reorderTasks,
         changeTaskTable,

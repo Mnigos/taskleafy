@@ -15,11 +15,13 @@ namespace TasksBoard {
 }
 
 function TasksBoard({ showDone }: TasksBoard.Props) {
-  const { tasksBoard, reorderTasks, changeTaskTable, tasks } = useTasksBoard()
+  const { tasksBoard, reorderTasks, changeTaskTable } = useTasksBoard()
 
   const tasksBoardEntries = Object.entries(tasksBoard).filter(([key]) =>
     showDone ? true : key !== 'done'
   )
+
+  const tasks = Object.values(tasksBoard).flatMap(board => board.items)
 
   async function onDragEng({ source, destination, draggableId }: DropResult) {
     if (!destination) return

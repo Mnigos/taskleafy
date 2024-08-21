@@ -15,7 +15,7 @@ namespace TasksBoard {
 }
 
 function TasksBoard({ showDone }: TasksBoard.Props) {
-  const { tasksBoard, reorderTasks, changeTaskTable } = useTasksBoard()
+  const { tasksBoard, reorderTasks, changeTaskTable, tasks } = useTasksBoard()
 
   const tasksBoardEntries = Object.entries(tasksBoard).filter(([key]) =>
     showDone ? true : key !== 'done'
@@ -47,6 +47,12 @@ function TasksBoard({ showDone }: TasksBoard.Props) {
 
   return (
     <>
+      {tasks.length === 0 && (
+        <div className="flex items-center justify-center md:min-h-[80vh]">
+          Nothing here yet. Add you first task and plan your day schedule.
+        </div>
+      )}
+
       <DragDropContext onDragEnd={onDragEng}>
         {tasksBoardEntries.map(([id, { header, items }]) => (
           <Fragment key={id}>

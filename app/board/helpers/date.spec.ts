@@ -27,10 +27,6 @@ describe('DateHelpers', () => {
       expect(formatDateValue(yesterday)).toEqual('Yesterday')
     })
 
-    test('should return "Next week" for next week', () => {
-      expect(formatDateValue(nextWeek)).toEqual('Next week')
-    })
-
     test('should return date in English', () => {
       expect(formatDateValue(customDateValue)).toEqual('January 1')
     })

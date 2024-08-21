@@ -27,11 +27,6 @@ export function formatDateValue(date: DateValue) {
       return 'Yesterday'
     }
 
-    case date.compare(nextWeek) >= 0 &&
-      date.compare(nextWeek.add({ days: 7 })) < 0: {
-      return 'Next week'
-    }
-
     default: {
       return new DateFormatter('en-US', {
         day: 'numeric',

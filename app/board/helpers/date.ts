@@ -4,6 +4,7 @@ import {
   startOfWeek,
   DateFormatter,
   type DateValue,
+  fromDate,
 } from '@internationalized/date'
 
 import type { BoardKeyWithoutOverdue } from '../types'
@@ -15,15 +16,17 @@ export const nextWeek = startOfWeek(now.add({ weeks: 1 }), 'en-US')
 
 export function formatDateValue(date: DateValue) {
   switch (true) {
-    case date.compare(now) === 0: {
+    case date.compare(now) >= 0 && date.compare(tomorrow) < 0: {
       return 'Today'
     }
 
-    case date.compare(tomorrow) === 0: {
+    case date.compare(tomorrow) >= 0 &&
+      date.compare(tomorrow.add({ days: 1 })) < 0: {
       return 'Tomorrow'
     }
 
-    case date.compare(yesterday) === 0: {
+    case date.compare(yesterday) >= 0 &&
+      date.compare(yesterday.add({ days: 1 })) < 0: {
       return 'Yesterday'
     }
 
@@ -46,6 +49,9 @@ export function dueDateFactory(
     case 'tomorrow': {
       return tomorrow.toDate(getLocalTimeZone())
     }
+    case 'thisWeek': {
+      return tomorrow.add({ days: 1 }).toDate(getLocalTimeZone())
+    }
     case 'nextWeek': {
       return nextWeek.toDate(getLocalTimeZone())
     }
@@ -58,12 +64,39 @@ export function dueDateFactory(
   }
 }
 
-export function boardKeyFactory(date: DateValue) {
-  if (date.day === now.day) return 'today'
-  if (date.day === tomorrow.day) return 'tomorrow'
-  if (date.day === yesterday.day) return 'overdue'
+export function boardKeyFactory(dueDate?: Date | DateValue | string | null) {
+  if (!dueDate) return 'noDate'
 
-  return 'noDate'
+  const date = typeof dueDate === 'string' ? new Date(dueDate) : dueDate
+
+  const dueDateValue = 'day' in date ? date : fromDate(date, getLocalTimeZone())
+
+  switch (true) {
+    case dueDateValue.compare(now) < 0: {
+      return 'overdue'
+    }
+    case dueDateValue.compare(now) >= 0 && dueDateValue.compare(tomorrow) < 0: {
+      return 'today'
+    }
+    case dueDateValue.compare(tomorrow) >= 0 &&
+      dueDateValue.compare(tomorrow.add({ days: 1 })) < 0: {
+      return 'tomorrow'
+    }
+    case dueDateValue.compare(tomorrow.add({ days: 1 })) >= 0 &&
+      dueDateValue.compare(nextWeek) < 0: {
+      return 'thisWeek'
+    }
+    case dueDateValue.compare(nextWeek) >= 0 &&
+      dueDateValue.compare(nextWeek.add({ days: 7 })) < 0: {
+      return 'nextWeek'
+    }
+    case dueDateValue.compare(nextWeek.add({ days: 7 })) > 0: {
+      return 'future'
+    }
+    default: {
+      return 'noDate'
+    }
+  }
 }
 
 export function isOverdue(date: DateValue) {

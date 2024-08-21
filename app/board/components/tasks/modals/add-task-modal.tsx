@@ -19,7 +19,7 @@ export function AddTaskModal() {
   return (
     <>
       <Button
-        className="fixed bottom-5 right-5"
+        className="fixed bottom-5 right-5 z-10"
         color="primary"
         onPress={onOpen}
       >

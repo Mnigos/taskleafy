@@ -2,10 +2,11 @@
 
 import { DragDropContext, Droppable, type DropResult } from '@hello-pangea/dnd'
 import { Fragment } from 'react'
+import { observer } from 'mobx-react-lite'
 
 import { TasksList } from './tasks-list'
 
-import { useTasksBoard } from '@app/board/context'
+import { useTasksBoard } from '@app/board/hooks'
 import type { BoardKey, BoardKeyWithoutOverdue } from '@app/board/types'
 
 namespace TasksBoard {
@@ -14,7 +15,7 @@ namespace TasksBoard {
   }>
 }
 
-function TasksBoard({ showDone }: TasksBoard.Props) {
+const TasksBoard = observer(({ showDone }: TasksBoard.Props) => {
   const { tasksBoard, reorderTasks, changeTaskTable } = useTasksBoard()
 
   const tasksBoardEntries = Object.entries(tasksBoard).filter(([key]) =>
@@ -42,7 +43,7 @@ function TasksBoard({ showDone }: TasksBoard.Props) {
       if (destination.droppableId === 'overdue') return
 
       if (itemToDrop) {
-        await changeTaskTable(itemToDrop, source, destination)
+        await changeTaskTable(itemToDrop, destination)
       }
     }
   }
@@ -73,6 +74,6 @@ function TasksBoard({ showDone }: TasksBoard.Props) {
       </DragDropContext>
     </>
   )
-}
+})
 
 export { TasksBoard }

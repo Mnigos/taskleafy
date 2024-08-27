@@ -3,7 +3,7 @@ import type { SetOptional } from 'type-fest'
 
 import { TaskModal, type TaskSchema } from './task-modal'
 
-import { useTasksBoard } from '@app/board/context'
+import { useTasksBoard } from '@app/board/hooks'
 
 namespace UpdateTaskModal {
   export type Props = Readonly<

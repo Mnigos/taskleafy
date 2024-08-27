@@ -3,9 +3,9 @@ import { userEvent, type UserEvent } from '@testing-library/user-event'
 
 import { RescheduleOverdueTasks } from './reschedule-overdue-tasks'
 
-import { useTasksBoard } from '@app/board/context'
+import { useTasksBoard } from '@app/board/hooks'
 
-vi.mock('@app/board/context')
+vi.mock('@app/board/hooks')
 
 describe('RescheduleOverdueTasks', () => {
   const rescheduleOverdueTasksSpy = vi.fn().mockResolvedValue(undefined)

@@ -10,7 +10,7 @@ import { LuCalendarClock } from 'react-icons/lu'
 import { CalendarPresets } from '../misc'
 
 import { now } from '@app/board/helpers/date'
-import { useTasksBoard } from '@app/board/context'
+import { useTasksBoard } from '@app/board/hooks'
 
 export function RescheduleOverdueTasks() {
   const [dueDateValue, setDueDateValue] = useState<DateValue | undefined>()

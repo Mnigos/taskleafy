@@ -6,7 +6,7 @@ import { LuPlusCircle } from 'react-icons/lu'
 
 import { TaskModal, type TaskSchema } from './task-modal'
 
-import { useTasksBoard } from '@app/board/context'
+import { useTasksBoard } from '@app/board/hooks'
 
 export function AddTaskModal() {
   const { onOpen, onOpenChange, isOpen, onClose } = useDisclosure()

@@ -6,6 +6,13 @@ import type { ReactNode } from 'react'
 
 import { TasksList } from './tasks-list'
 
+vi.mock('@app/board/hooks', () => ({
+  useTasksBoard: () => ({
+    tasksBoard: vi.fn(),
+    markTaskAsDone: vi.fn(),
+  }),
+}))
+
 const Wrapper = ({ children }: Readonly<{ children: ReactNode }>) => (
   <DragDropContext onDragEnd={vi.fn()}>
     <Droppable droppableId="today">

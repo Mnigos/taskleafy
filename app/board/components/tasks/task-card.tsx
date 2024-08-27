@@ -10,7 +10,7 @@ import { LuCalendarDays } from 'react-icons/lu'
 
 import { UpdateTaskModal } from './modals'
 
-import { useTasksBoard } from '@app/board/context'
+import { useTasksBoard } from '@app/board/hooks'
 import { formatDateValue, isOverdue } from '@app/board/helpers/date'
 import type { BoardKeyWithoutOverdue, PickedTask } from '@app/board/types'
 
@@ -64,7 +64,7 @@ function TaskCard({
 
                   if (!isDone && task && sourceKey !== 'done')
                     setTimeout(async () => {
-                      await markTaskAsDone(task, sourceKey)
+                      await markTaskAsDone(task)
                     }, 500)
                 }}
               />

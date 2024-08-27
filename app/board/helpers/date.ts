@@ -100,5 +100,5 @@ export function boardKeyFactory(dueDate?: Date | DateValue | string | null) {
 }
 
 export function isOverdue(date: DateValue) {
-  return date.day < now.day
+  return date.compare(now) < 0
 }

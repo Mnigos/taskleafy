@@ -90,14 +90,18 @@ jobs:
         with:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-      - name: Run e2e tests 🧪
-        run: bun run test:e2e
-
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: Run Playwright tests
+      - name: Run e2e tests 🧪
         run: npx playwright test
+        env:
+          DATABASE_URL: url
+          AUTH_DISCORD_ID: secret
+          AUTH_DISCORD_SECRET: secret
+          AUTH_GITHUB_ID: secret
+          AUTH_GITHUB_SECRET: secret
+          AUTH_SECRET: secret
 
       - uses: actions/upload-artifact@v4
         if: always()

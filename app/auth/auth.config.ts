@@ -4,6 +4,7 @@ import Github from 'next-auth/providers/github'
 
 export const nextAuthConfig: NextAuthConfig = {
   providers: [Discord, Github],
+  trustHost: true,
   callbacks: {
     jwt({ token, user }) {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

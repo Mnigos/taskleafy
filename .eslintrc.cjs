@@ -68,13 +68,17 @@ module.exports = {
   ],
   overrides: [
     {
-      files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
+      files: ['./app/**/?(*.)+(spec|test).[jt]s?(x)'],
       extends: ['plugin:testing-library/react', 'plugin:vitest/recommended'],
       rules: {
         'sonarjs/no-duplicate-string': 'off',
         '@typescript-eslint/unbound-method': 'off',
         '@typescript-eslint/no-unsafe-member-access': 'off',
       },
+    },
+    {
+      files: 'tests/e2e/**',
+      extends: 'plugin:playwright/recommended',
     },
     {
       files: ['tailwind.config.ts'],

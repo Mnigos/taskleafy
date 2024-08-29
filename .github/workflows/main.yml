@@ -30,6 +30,12 @@ jobs:
           AUTH_GITHUB_SECRET: secret
           AUTH_SECRET: secret
 
+      - name: Upload production artifact 📤
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: ./.next
+
   lint:
     name: 'Lint 🐱'
     needs: build
@@ -55,7 +61,7 @@ jobs:
           AUTH_SECRET: secret
 
   test:
-    name: 'Test 🧪'
+    name: 'Unit Tests 🧪'
     needs: build
     runs-on: ubuntu-latest
 
@@ -75,3 +81,48 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  e2e:
+    name: 'E2E Tests 🧪'
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@master
+
+      - name: Setup 👨🏻‍💻
+        uses: ./.github/actions/setup
+        with:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Download production artifact 📤
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: ./.next
+
+      - name: log dist
+        run: ls
+
+      - name: Run e2e tests 🧪
+        run: npx playwright test
+        env:
+          DATABASE_URL: url
+          AUTH_DISCORD_ID: secret
+          AUTH_DISCORD_SECRET: secret
+          AUTH_GITHUB_ID: secret
+          AUTH_GITHUB_SECRET: secret
+          AUTH_SECRET: secret
+          E2E_ACCOUNT_EMAIL: ${{ secrets.E2E_ACCOUNT_EMAIL }}
+          E2E_ACCOUNT_PASSWORD: ${{ secrets.E2E_ACCOUNT_PASSWORD }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

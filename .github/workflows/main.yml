@@ -30,6 +30,12 @@ jobs:
           AUTH_GITHUB_SECRET: secret
           AUTH_SECRET: secret
 
+      - name: Upload production artifact 📤
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: ./.next
+
   lint:
     name: 'Lint 🐱'
     needs: build
@@ -55,7 +61,7 @@ jobs:
           AUTH_SECRET: secret
 
   test:
-    name: 'Test 🧪'
+    name: 'Unit Tests 🧪'
     needs: build
     runs-on: ubuntu-latest
 
@@ -77,7 +83,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   e2e:
-    name: 'E2E 🧪'
+    name: 'E2E Tests 🧪'
     needs: build
     runs-on: ubuntu-latest
 
@@ -93,6 +99,15 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
+      - name: Download production artifact 📤
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: ./.next
+
+      - name: log dist
+        run: ls
+
       - name: Run e2e tests 🧪
         run: npx playwright test
         env:
@@ -102,6 +117,8 @@ jobs:
           AUTH_GITHUB_ID: secret
           AUTH_GITHUB_SECRET: secret
           AUTH_SECRET: secret
+          E2E_ACCOUNT_EMAIL: ${{ secrets.E2E_ACCOUNT_EMAIL }}
+          E2E_ACCOUNT_PASSWORD: ${{ secrets.E2E_ACCOUNT_PASSWORD }}
 
       - uses: actions/upload-artifact@v4
         if: always()

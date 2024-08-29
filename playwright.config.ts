@@ -45,7 +45,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'bun start',
+    command: 'npx next start',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
   },

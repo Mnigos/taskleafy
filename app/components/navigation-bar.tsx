@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import {
   Navbar,
   NavbarBrand,
@@ -15,7 +16,15 @@ export async function NavigationBar() {
 
   return (
     <Navbar>
-      <NavbarBrand className="font-bold text-primary">TaskLeafy</NavbarBrand>
+      <NavbarBrand className="flex gap-2 font-bold text-primary">
+        <Image
+          src="/task-leafy-icon.png"
+          width={32}
+          height={32}
+          alt="TaskLeafy"
+        />
+        TaskLeafy
+      </NavbarBrand>
       <NavbarContent justify="end">
         <NavbarItem>
           {session?.user ? (
